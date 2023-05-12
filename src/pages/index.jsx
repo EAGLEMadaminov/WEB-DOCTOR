@@ -2,6 +2,8 @@ import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { FiChevronDown } from "react-icons/fi";
+import { CiGlobe } from "react-icons/ci";
+
 export default function Home() {
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
@@ -88,17 +90,17 @@ export default function Home() {
           </form>
         </div>
         <div className="flex w-[111px] h-[44px] items-center justify-between border border-[#D7E6E7]  rounded-[12px] px-[13px] py-[10px] mt-[62px]  ml-[850px]">
-          <div className="bg-[url('../images/globe.png')] w-[19px] h-[19px] "></div>
+          <CiGlobe className="text-[#1BB7B5] text-xl" />
           <select
             name=""
             id=""
             style={{ WebkitAppearance: "none" }}
-            className="outline-none  bg-[#F5FAFB] ml-10 pr-10 absolute bg-transparent font-[500] "
+            className="outline-none  bg-[#F5FAFB] px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
           >
             <option value="uz">UZ</option>
             <option value="ru">RU</option>
           </select>
-          <FiChevronDown />
+          <FiChevronDown className="text-xl" />
         </div>
       </div>
     </div>

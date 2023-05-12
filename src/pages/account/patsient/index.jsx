@@ -39,18 +39,18 @@ function Patsient() {
             </p>
           </div>
           <div className="flex">
-            <div className="flex w-[111px] h-[36px] items-center justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
-              <CiGlobe className="text-[#1BB7B5] text-3xl" />
+            <div className="flex w-[111px] h-[36px] items-center relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
+              <CiGlobe className="text-[#1BB7B5] text-xl" />
               <select
                 name=""
                 id=""
                 style={{ WebkitAppearance: "none" }}
-                className="outline-none  bg-[#F5FAFB]  pr-10 bg-transparent font-[500] "
+                className="outline-none  bg-[#F5FAFB] px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
               >
                 <option value="uz">UZ</option>
                 <option value="ru">RU</option>
               </select>
-              <FiChevronDown />
+              <FiChevronDown className="text-xl" />
             </div>
             <button
               onClick={handleExit}
