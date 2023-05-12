@@ -102,7 +102,7 @@ function Patsient() {
               <div className="ml-[18px] text-[#759495]">
                 <p>Viloyat</p>
                 <h3 className="text-[18px] text-[#1B3B3C]">
-                  Farg'ona viloyati
+                  Farg&apos;ona viloyati
                 </h3>
               </div>
             </div>

@@ -85,7 +85,7 @@ export default function Home() {
             hover:bg-gradient-to-t hover:from-[#1BB7B5] hover:to-[#12A7AA] hover:text-white"
               onClick={handleEnterList}
             >
-              Ro'yhatdan o'tish
+              Ro&apos;yhatdan o&apos;tish
             </button>
           </form>
         </div>

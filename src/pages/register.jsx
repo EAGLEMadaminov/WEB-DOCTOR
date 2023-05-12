@@ -3,7 +3,7 @@ import { BiChevronRight } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function register() {
+export default function Register() {
   const [startDate, setStartDate] = useState();
   const [inputType, setInputType] = useState("password");
   const [secondInput, setSecondInput] = useState("password");
@@ -142,13 +142,13 @@ export default function register() {
                 <option value="tosh">Toshkent</option>
                 <option value="and">Andijon</option>
                 <option value="bux">Buxoro</option>
-                <option value="far">Farg'ona</option>
+                <option value="far">Farg&apos;ona</option>
                 <option value="jiz">Jizzax</option>
                 <option value="xor">Xorazm</option>
                 <option value="nam">Namangan</option>
                 <option value="nav">Navoiy</option>
                 <option value="qash">Qashqadaryo</option>
-                <option value="qor">Qoraqalpog'iston</option>
+                <option value="qor">Qoraqalpog&apos;iston</option>
                 <option value="sam">Samarqand</option>
                 <option value="sir">Sirdaryo</option>
                 <option value="sur">Surxondaryo</option>

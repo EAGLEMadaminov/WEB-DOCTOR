@@ -27,7 +27,7 @@ function Account() {
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} />
+            <Image src={img} width={50} height={50} alt="site logo" />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
@@ -107,7 +107,7 @@ function Account() {
             <div className="flex items-end">
               <div className="flex flex-col">
                 <label className="text-[#759495] mb-[10px]" htmlFor="date">
-                  Tug'ilgan kun
+                  Tug&apos;ilgan kun
                 </label>
                 <input
                   type="text"
