@@ -30,6 +30,10 @@ module.exports = {
         "patsient-davolash": "url('./src/images/patsient/heart.png')",
         "patsient-tavsiyanoma": "url('./src/images/patsient/books.png')",
         "patsient-konsultant": "url('./src/images/patsient/konsultant.png')",
+        "davolash-dori": "url('./src/images/davoalash/davoalash-dori.png')",
+        "davolash-issue": "url('./src/images/davolash/issue.png')",
+        "sand-clock": "url('./src/images/davolash/sand-clock.png')",
+        "drug-correct": "url('./src/images/davolash/correct.png')",
       },
       backgroundSize: {
         auto: "auto",

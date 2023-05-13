@@ -2,13 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
- @layer base {
+@layer base {
   input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
-} 
+@layer components {
+  .davolash-line::after,
+  .davolash-line::before {
+    background-color: #C5D7D8;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+  }
+  .davolash-line::after {
+    left: 0.5em;
+    margin-right: -50%;
+  }
+  .davolash-line::before {
+    right: 0.5em;
+    margin-left: -50%;
+  }
+}
 :root {
   --max-width: 1100px;
   --border-radius: 12px;

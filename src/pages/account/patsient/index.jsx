@@ -27,6 +27,9 @@ function Patsient() {
   const handleExit = () => {
     window.location.pathname = "";
   };
+  const GoToBackBtn=()=>{
+    router.push("/account")
+  }
   return (
     <div className="h-[100vh]  bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
@@ -65,7 +68,8 @@ function Patsient() {
         <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
           <div className="flex justify-between">
             <div>
-              <button className="flex items-center ml-[40px] py-1 mt-[30px] bg-[#F8FCFC] border rounded-[12px] w-[208px] font-[500]">
+              <button className="flex items-center ml-[40px] py-1 mt-[30px] bg-[#F8FCFC] border rounded-[12px] w-[208px] font-[500]"
+              onClick={GoToBackBtn}>
                 <BsArrowLeft className="mx-3" /> Orqaga qaytish
               </button>
               <div className="bg-[url('../images/patsient/patsient-left.png')] bg-no-repeat  ml-[74px] w-[226px] h-[194px]"></div>

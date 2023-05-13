@@ -33,7 +33,7 @@ function Account() {
             </p>
           </div>
           <div className="flex">
-            <div className="flex w-[111px] h-[36px] items-center justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
+            <div className="flex w-[111px] h-[36px] items-center relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
               <CiGlobe className="text-[#1BB7B5] text-xl" />
               <select
                 name=""
@@ -139,10 +139,10 @@ function Account() {
               )}
             </div>
             {showInfo ? (
-              <div className="flex items-center mt-5">
+              <div className="flex items-center my-5">
                 <IoMdPerson className="text-[#759495]" />
                 <p className="ml-3 text-[#1B3B3C]">
-                  Eshonov Fakhriyor Farxodbek o’g’li
+                  Eshonov Fakhriyor Farxodbek o&apos;g&apos;li
                 </p>
               </div>
             ) : (
