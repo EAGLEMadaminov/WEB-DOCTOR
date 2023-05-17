@@ -34,6 +34,7 @@ module.exports = {
         "davolash-issue": "url('./src/images/davolash/issue.png')",
         "sand-clock": "url('./src/images/davolash/sand-clock.png')",
         "drug-correct": "url('./src/images/davolash/correct.png')",
+        "history": "url('./src/images/davolash/history.png')",
       },
       backgroundSize: {
         auto: "auto",

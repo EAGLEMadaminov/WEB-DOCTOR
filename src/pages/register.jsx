@@ -32,7 +32,11 @@ export default function Register() {
               <span className="rounded-[50px]  border border-[#D7E6E7] w-[16px] h-[16px] "></span>
               <span className="rounded-[50px] bg-[#1BB7B5] border-[#1BB7B5] border w-[16px]  h-[16px]"></span>
             </div>
-            <form  method="POST" className="mt-[20px] text-[12px]">
+            <form
+              method="POST"
+              action="httms://hecho.htmlacademy.ru"
+              className="mt-[20px] text-[12px]"
+            >
               <label htmlFor="password" className=" text-[#759495]">
                 Parol
               </label>
@@ -90,16 +94,17 @@ export default function Register() {
               <span className="rounded-[50px]  border border-[#D7E6E7] w-[16px] h-[16px] "></span>
             </div>
             <form
-              action=""
+              action="https://echo.htmlacademy.ru"
               method="POST"
               className="w-full flex flex-col text-[12px]"
+              onSubmit={handleClick}
             >
               <label htmlFor="user-info" className="text-[12px] mt-3">
                 FISH
               </label>
               <input
                 type="text"
-                required={true}
+                required
                 placeholder="(Eshonov Fakhriyor Farxodbekogli)"
                 className="w-full outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
               />
@@ -186,6 +191,7 @@ export default function Register() {
                 />
               </div>
               <button
+                type="submit"
                 className="text-white rounded-[12px] text-[16px] mt-3 py-2 bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
                 onClick={handleClick}
               >
