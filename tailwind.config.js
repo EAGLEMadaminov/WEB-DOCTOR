@@ -34,7 +34,12 @@ module.exports = {
         "davolash-issue": "url('./src/images/davolash/issue.png')",
         "sand-clock": "url('./src/images/davolash/sand-clock.png')",
         "drug-correct": "url('./src/images/davolash/correct.png')",
-        "history": "url('./src/images/davolash/history.png')",
+        history: "url('./src/images/davolash/history.png')",
+        davleniya: "url('./src/images/tavsiyanoma/davleniya.png')",
+        rentgen: "url('./src/images/tavsiyanoma/rentgen.png')",
+        "qon-analiz": "url('./src/images/tavsiyanoma/analiz.png')",
+        doctor: "url('./src/images/konsultatsiya/doctor.png')",
+        yurak: "url('./src/images/tavsiyanoma/yurak.png')",
       },
       backgroundSize: {
         auto: "auto",

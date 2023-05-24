@@ -51,6 +51,7 @@ export default function Home() {
               name="login"
               className="border border-[#D7E6E7] rounded-[12px] p-2"
               type="text"
+              required
               placeholder="Loginni kiriting"
               autoComplete="off"
             />
@@ -66,6 +67,7 @@ export default function Home() {
                 className=" w-full p-2 rounded-[12px]"
                 type={inputType}
                 placeholder="*******"
+                required
                 autoComplete="off"
               />
               <span

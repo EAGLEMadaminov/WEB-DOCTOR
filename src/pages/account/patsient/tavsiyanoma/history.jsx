@@ -9,17 +9,17 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useRouter } from "next/router";
 
-function Davolash() {
+function Tavsiyanoma() {
   const router = useRouter();
   const GoToBackBtn = () => {
-    router.push("/account/patsient/davolash");
+    router.push("/account/patsient/tavsiyanoma");
   };
   const handleExit = () => {
     window.location.pathname = "";
   };
 
   const addNewBtn = () => {
-    router.push("/account/patsient/davolash/add");
+    router.push("/account/patsient/tavsiyanoma/add");
   };
   return (
     <div className="h-[100vh]  bg-[#F7FEFE]">
@@ -65,7 +65,9 @@ function Davolash() {
               >
                 <BsArrowLeft className="mx-3" /> Orqaga qaytish
               </button>
-              <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">Davolash</h3>
+              <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
+                Tavsiyanoma
+              </h3>
             </div>
             <div className="mr-10 flex items-center">
               <button className="px-[30px] bg-[#F8FCFC] py-2 rounded-[12px] flex items-center">
@@ -92,4 +94,4 @@ function Davolash() {
   );
 }
 
-export default Davolash;
+export default Tavsiyanoma;

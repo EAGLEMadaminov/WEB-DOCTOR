@@ -33,7 +33,7 @@ export default function Register() {
               <span className="rounded-[50px] bg-[#1BB7B5] border-[#1BB7B5] border w-[16px]  h-[16px]"></span>
             </div>
             <form
-              method="POST"
+              method="post"
               action="httms://hecho.htmlacademy.ru"
               className="mt-[20px] text-[12px]"
             >
@@ -132,7 +132,7 @@ export default function Register() {
               <input
                 type="text"
                 name="passport"
-                id=""
+                required
                 placeholder="(AA 2314658)"
                 className="outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
               />
@@ -165,6 +165,7 @@ export default function Register() {
                 type="text"
                 placeholder="(Kardiolog)"
                 name="major"
+                required
                 className="outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
               />
               <label htmlFor="work-place" className="mt-3">
@@ -174,18 +175,25 @@ export default function Register() {
                 type="text"
                 name="work-place"
                 placeholder="(ishsiz)"
+                required
                 className="outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
               />
               <label htmlFor="degree" className="mt-3">
                 Lavozim
               </label>
-              <input type="text" name="degree" className="(Bosh vrach)" />
+              <input
+                type="text"
+                name="degree"
+                required
+                className="outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
+              />
               <label htmlFor="phone-num">Telefon raqamingiz</label>
               <div className="  rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]">
                 +998
                 <input
                   type="number"
                   name="phone-num"
+                  required
                   placeholder="-- --- -- --"
                   className="outline-none bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                 />
@@ -193,7 +201,7 @@ export default function Register() {
               <button
                 type="submit"
                 className="text-white rounded-[12px] text-[16px] mt-3 py-2 bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
-                onClick={handleClick}
+                // onClick={handleClick}
               >
                 Davom etish
               </button>

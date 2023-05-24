@@ -99,7 +99,7 @@ function Davolash() {
 
           <div className="flex mx-10 mt-5 mb-20">
             <div
-              className="border rounded-[12px] p-3 flex  flex-col w-[305px] cursor-pointer "
+              className="border rounded-[12px] p-3 flex shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px] cursor-pointer "
               onClick={showFormBtn}
             >
               <div className="flex items-center mb-2">
@@ -146,7 +146,7 @@ function Davolash() {
             </div>
 
             <div
-              className="border rounded-[12px] p-3 flex flex-col w-[305px] ml-4 cursor-pointer"
+              className="border rounded-[12px] shadow-[0px_6px_16px] shadow-[#EFF4F4] p-3 flex flex-col w-[305px] ml-4 cursor-pointer"
               onClick={showFormBtn}
             >
               <div className="flex items-center mb-2">
@@ -176,7 +176,7 @@ function Davolash() {
             </div>
 
             <div
-              className="border   rounded-[12px] p-3 flex flex-col w-[305px] ml-4 cursor-pointer"
+              className="border  shadow-[0px_6px_16px] shadow-[#EFF4F4] rounded-[12px] p-3 flex flex-col w-[305px] ml-4 cursor-pointer"
               onClick={showFormBtn}
             >
               <div className="flex items-center mb-2">
