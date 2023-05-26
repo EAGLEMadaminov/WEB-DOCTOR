@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
-
-export default function App({ Component, pageProps }) {
+import { appWithTranslation } from "next-i18next";
+function App({ Component, pageProps }) {
   return <Component {...pageProps} />;
 }
+export default appWithTranslation(App);

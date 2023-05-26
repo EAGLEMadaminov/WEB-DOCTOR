@@ -8,8 +8,18 @@ import { BsArrowRight } from "react-icons/bs";
 import { IoMdPerson } from "react-icons/io";
 import { CiGlobe } from "react-icons/ci";
 import { useRouter } from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["register", "account"])),
+    },
+  };
+}
 function Account() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [showInfo, setShowInfo] = useState(true);
 
@@ -21,8 +31,16 @@ function Account() {
     window.location.pathname = "";
   };
 
+  const ChangeLangBtn = (e) => {
+    let lang = e.target.value;
+    if (lang === "ru") {
+      router.push("/ru/account");
+    } else {
+      window.location.pathname = "/account";
+    }
+  };
   return (
-    <div className="h-[100vh]  bg-[#F7FEFE]">
+    <div className="h-[110vh]  bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
@@ -33,24 +51,23 @@ function Account() {
             </p>
           </div>
           <div className="flex">
-            <div className="flex w-[111px] h-[36px] items-center relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
+            <div className="flex w-[111px] h-[36px] items-center dark:text-[#1B3B3C] relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
               <CiGlobe className="text-[#1BB7B5] text-xl" />
               <select
-                name=""
-                id=""
+                onChange={ChangeLangBtn}
                 style={{ WebkitAppearance: "none" }}
-                className="outline-none  bg-[#F5FAFB] px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
+                className="outline-none  bg-[#F5FAFB]  px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
               >
                 <option value="uz">UZ</option>
                 <option value="ru">RU</option>
               </select>
-              <FiChevronDown className="text-xl" />
+              <FiChevronDown className="text-xl " />
             </div>
             <button
               onClick={handleExit}
               className="w-[200px] ml-[18px] flex py-[5px]  px-[18px]items-center h-[36px] text-[#FF0000] border rounded-[12px] border-[#D7E6E7]"
             >
-              <RxExit className="mx-2 my-auto" /> Akkuntdan chiqish
+              <RxExit className="mx-2 my-auto" /> {t("account:exit_account")}
             </button>
           </div>
         </div>
@@ -63,10 +80,10 @@ function Account() {
             <div className="text-center">
               <div className="w-[130px] mx-auto h-[130px] relative mt-[65px] rounded-[130px] border  place-items-center border-[#D7E6E7]  bg-[url('../images/account/account-person.png')] bg-no-repeat bg-bottom"></div>
               <p className="text-[18px] text-[#759495] text-center">
-                Vrach kardiolog
+                {t("account:major_doctor")}
               </p>
               <h2 className="text-[32px] text-[#1B3B3C] text-center">
-                E. F. Fakhriyor
+                {t("account:doctor_name")}
               </h2>
             </div>
 
@@ -79,7 +96,7 @@ function Account() {
                 <span className="block "></span>
               </div>
               <div className="ml-[18px] text-[#759495]">
-                <p>Ish joyingiz</p>
+                <p>{t("register:job_place")}</p>
                 <h3 className="text-[20pz] text-[#1B3B3C]">
                   Medline Farg’ona filiali
                 </h3>
@@ -92,7 +109,7 @@ function Account() {
                 <span className="block "></span>
               </div>
               <div className="ml-[18px] text-[#759495]">
-                <p>Lavozim</p>
+                <p>{t("register:position")}</p>
                 <h3 className="text-[20pz] text-[#1B3B3C]">
                   Bosh vrach kardiolog
                 </h3>
@@ -102,41 +119,50 @@ function Account() {
 
           <div className="mx-10">
             <h2 className="font-[500] text-[24px] text-[#1B3B3C] ">
-              Patsient bilan ishlash
+              {t("account:pattsient_btn")}
             </h2>
             <div className="flex items-end">
-              <div className="flex flex-col">
-                <label className="text-[#759495] mb-[10px]" htmlFor="date">
-                  Tug&apos;ilgan kun
-                </label>
-                <input
-                  type="text"
-                  name="date"
-                  placeholder="06.05.2023"
-                  className="w-[305px] border bg-[#F8FCFC] p-2 border-[#D7E6E7] rounded-[12px]"
-                />
-              </div>
-              <div className="flex flex-col ml-5">
-                <label className="text-[#759495] mb-[10px]" htmlFor="passport">
-                  Passport seriya
-                </label>
-                <input
-                  type="text"
-                  placeholder="AA7707787"
-                  className="w-[305px] border bg-[#F8FCFC] p-2 border-[#D7E6E7] rounded-[12px]"
-                />
-              </div>
-              {showInfo ? (
-                <button
-                  className="text-white ml-5 p-2  justify-between flex w-full rounded-[12px] mt-3  bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
-                  onClick={EnterPatsientBtn}
-                >
-                  Patsient bilan ishlash
-                  <BsArrowRight className="text-2xl " />
-                </button>
-              ) : (
-                ""
-              )}
+              <form
+                action=""
+                onClick={(e) => e.preventDefault()}
+                className="flex items-end"
+              >
+                <div className="flex flex-col">
+                  <label className="text-[#759495] mb-[10px]" htmlFor="date">
+                    {t("account:birth_date")}
+                  </label>
+                  <input
+                    type="text"
+                    name="date"
+                    placeholder="06.05.2023"
+                    className="w-[305px] border dark:text-black outline-none dark:bg-white bg-[#F8FCFC] p-2 border-[#D7E6E7] rounded-[12px]"
+                  />
+                </div>
+                <div className="flex flex-col ml-5">
+                  <label
+                    className="text-[#759495] mb-[10px]"
+                    htmlFor="passport"
+                  >
+                    {t("account:passport")}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="AA7707787"
+                    className="w-[305px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white dark:text-black border-[#D7E6E7] rounded-[12px]"
+                  />
+                </div>
+                {showInfo ? (
+                  <button
+                    className="text-white ml-5 p-2  justify-between flex w-[300px] rounded-[12px] mt-3  bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
+                    onClick={EnterPatsientBtn}
+                  >
+                    {t("account:pattsient_btn")}
+                    <BsArrowRight className="text-2xl " />
+                  </button>
+                ) : (
+                  ""
+                )}
+              </form>
             </div>
             {showInfo ? (
               <div className="flex items-center my-5">

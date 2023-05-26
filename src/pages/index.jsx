@@ -1,15 +1,35 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/router";
 import { FiChevronDown } from "react-icons/fi";
 import { CiGlobe } from "react-icons/ci";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { UseTranslation, useTranslation } from "next-i18next";
 
-export default function Home() {
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["home"])),
+    },
+  };
+}
+export default function Home(props) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
+
   const handleEnterList = (e) => {
     e.preventDefault();
     router.push("register");
+  };
+  
+  const ChangeLangBtn = (e) => {
+    let lang = e.target.value;
+    if (lang === "ru") {
+      router.push("/ru");
+    } else {
+      window.location.pathname = "";
+    }
   };
 
   return (
@@ -36,8 +56,9 @@ export default function Home() {
         </div>
         <div className="flex flex-col items-center w-[397px]  ">
           <h2 className="text-[24px] text-center w-[213px] text-[Black] mx-auto font-[500] leading-[38px]">
-            Tizmga <span className="text-[#1BB7B5]">kirish</span>
+            {t("home:enter_system")} <span className="text-[#1BB7B5]"></span>
           </h2>
+          <h1 className="z-[3] text-black">{props.locale}</h1>
           <form
             action=""
             className="w-full flex flex-col "
@@ -45,26 +66,26 @@ export default function Home() {
             method="POST"
           >
             <label htmlFor="login" className="mt-[10px] mb-2 text-[#759495]">
-              Login (Passport seriya)
+              {t("home:login")}
             </label>
             <input
               name="login"
-              className="border border-[#D7E6E7] rounded-[12px] p-2"
+              className="border border-[#D7E6E7] rounded-[12px] p-2 dark:bg-white dark:text-black"
               type="text"
               required
-              placeholder="Loginni kiriting"
+              placeholder={t("home:input_login")}
               autoComplete="off"
             />
             <label
               htmlFor="password"
               className="mt-[14px]  mb-2 text-[#759495]"
             >
-              Parol
+              {t("home:parol")}
             </label>
             <div className="border relative border-[#D7E6E7] rounded-[12px]">
               <input
                 name="password"
-                className=" w-full p-2 rounded-[12px]"
+                className=" w-full p-2 rounded-[12px] dark:bg-white dark:text-black"
                 type={inputType}
                 placeholder="*******"
                 required
@@ -80,29 +101,33 @@ export default function Home() {
               ></span>
             </div>
             <button className="mt-[24px] py-[13px] bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] text-white rounded-[12px]  font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]">
-              Kirish
+              {t("home:enter")}
             </button>
             <button
               className="py-[13px] mt-[12px] bg-white text-[#1BB7B5] font-[500] rounded-[12px]
             hover:bg-gradient-to-t hover:from-[#1BB7B5] hover:to-[#12A7AA] hover:text-white"
               onClick={handleEnterList}
             >
-              Ro&apos;yhatdan o&apos;tish
+              {t("home:autorization_btn")}
             </button>
           </form>
         </div>
         <div className="flex w-[111px] h-[44px] items-center justify-between border border-[#D7E6E7]  rounded-[12px] px-[13px] py-[10px] mt-[62px]  ml-[850px]">
-          <CiGlobe className="text-[#1BB7B5] text-xl" />
+          <CiGlobe className="text-[#1BB7B5] text-xl " />
           <select
-            name=""
-            id=""
             style={{ WebkitAppearance: "none" }}
-            className="outline-none  bg-[#F5FAFB] px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
+            className="outline-none  bg-[#F5FAFB] dark:text-[#1B3B3C] px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
+            onChange={ChangeLangBtn}
+            htmlFor="lang"
           >
-            <option value="uz">UZ</option>
-            <option value="ru">RU</option>
+            <option name="lang" value="uz">
+              {t("home:lang")}{" "}
+            </option>
+            <option name="lang" value="ru">
+              RU
+            </option>
           </select>
-          <FiChevronDown className="text-xl" />
+          <FiChevronDown className="text-xl dark:text-[#1B3B3C]" />
         </div>
       </div>
     </div>

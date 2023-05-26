@@ -11,8 +11,19 @@ import { BsClock } from "react-icons/bs";
 import ReactDatePicker from "react-datepicker";
 import { BiChevronDown } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["add", "account"])),
+    },
+  };
+}
 
 function Add() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [startDate, setStartDate] = useState(new Date());
   const [showDrugList, setShowDrgList] = useState(false);
@@ -36,9 +47,16 @@ function Add() {
   };
 
   const GoToBackBtn = () => {
-    router.push("/account/patsient/tavsiyanoma");
+    router.push("/account/patsient/konsultatsiya");
   };
-
+  const ChangeLangBtn = (e) => {
+    let lang = e.target.value;
+    if (lang === "ru") {
+      router.push("/ru/account/patsient/konsultatsiya/add");
+    } else {
+      window.location.pathname = "/account/patsient/konsultatsiya/add";
+    }
+  };
   return (
     <div className=" h-[100vh] bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
@@ -51,11 +69,10 @@ function Add() {
             </p>
           </div>
           <div className="flex">
-            <div className="flex w-[111px] h-[36px] items-center relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
+            <div className="flex dark:text-[#1B3B3C] w-[111px] h-[36px] items-center relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
               <CiGlobe className="text-[#1BB7B5] text-xl" />
               <select
-                name=""
-                id=""
+                onChange={ChangeLangBtn}
                 style={{ WebkitAppearance: "none" }}
                 className="outline-none  bg-[#F5FAFB] px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
               >
@@ -68,24 +85,24 @@ function Add() {
               onClick={handleExit}
               className="w-[200px] ml-[18px] flex py-[5px]  px-[18px]items-center h-[36px] text-[#FF0000] border rounded-[12px] border-[#D7E6E7]"
             >
-              <RxExit className="mx-2 my-auto" /> Akkuntdan chiqish
+              <RxExit className="mx-2 my-auto" /> {t("account:exit_account")}
             </button>
           </div>
         </div>
 
         {/* body  */}
-        <form action="" method="post">
+        <form action="" method="post" onClick={(e) => e.preventDefault()}>
           <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
             <div className="flex justify-between mt-7 mb-3">
               <div className="flex items-center">
                 <button
-                  className="flex items-center ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
+                  className="flex items-center dark:text-[#1B3B3C] ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
                   onClick={GoToBackBtn}
                 >
-                  <BsArrowLeft className="mx-3" /> Orqaga qaytish
+                  <BsArrowLeft className="mx-3" /> {t("account:go_back_btn")}
                 </button>
                 <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
-                  Analiz va rengenlar
+                  {t("account:check_blood")}
                 </h3>
               </div>
               <div className="mr-10 flex items-center">
@@ -94,7 +111,7 @@ function Add() {
                   className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
                 >
                   <BsCheck2 className="mr-3" />
-                  Saqlash
+                  {t("add:save")}
                 </button>
               </div>
             </div>
@@ -102,14 +119,14 @@ function Add() {
             <div className="mx-6 mt-10 rounded-[18px] border border-[#D7E6E7] relative">
               <div className="flex">
                 <div className="text-[14px] text-[#759495] pl-5 font-[400] border rounded-tl-[18px] border-[#D7E6E7] w-[300px] flex items-center p-2">
-                  Analiz yoki rengenni tanlang
+                  {t("add:check_rengen")}
                 </div>
 
                 <div className="text-[14px] text-[#759495] font-[400] border w-[400px]  border-[#D7E6E7]  flex items-center p-2">
-                  <p className="ml-4 ">Qachon?</p>
+                  <p className="ml-4 "> {t("add:when")} </p>
                 </div>
                 <div className="text-[14px] text-[#759495] font-[400] border w-[350px] rounded-tr-[18px] border-[#D7E6E7]  flex items-center p-2">
-                  <p className="ml-4 ">Qo’shimcha ma’lumot</p>
+                  <p className="ml-4 "> {t("add:additional_info")} </p>
                 </div>
               </div>
               <div className="flex bg-[#F8FCFC] rounded-b-[18px] min-h-[300px]">
@@ -120,7 +137,7 @@ function Add() {
                     type="button"
                   >
                     <BiChevronDown className="mr-2 text-[18px]" />
-                    Tanlang
+                    {t("add:choose")}
                   </button>
                   {showDrugList ? (
                     <div>
@@ -132,9 +149,11 @@ function Add() {
                           className="parasetamol flex py-2"
                           value={"parasetomol"}
                         >
-                          Analiz
+                          {t("add:analiz")}
                         </li>
-                        <li className="aspirin flex py-2">Rengen</li>
+                        <li className="aspirin flex py-2">
+                          {t("add:rengen")}{" "}
+                        </li>
                       </ul>
                     </div>
                   ) : (
@@ -148,7 +167,7 @@ function Add() {
                     <ReactDatePicker
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
-                      className="w-[80px] bg-transparent outline-none"
+                      className="w-[80px] bg-transparent dark:text-[#1B3B3C] outline-none"
                     />
                   </div>
                   <div className="border border-[#D7E6E7] bg-white rounded-[12px] mx-2 mt-[14px] pb-[14px] w-[150px]  p-[10px] flex   items-center">
@@ -156,7 +175,7 @@ function Add() {
                     <input
                       type="text"
                       placeholder="00:00"
-                      className="w-14 h-3 outline-none placeholder:text-[#C5D7D8]"
+                      className="w-14 h-3 dark:text-[#1B3B3C] dark:bg-white outline-none placeholder:text-[#C5D7D8]"
                     />
                   </div>
                 </div>
@@ -164,8 +183,8 @@ function Add() {
                   <textarea
                     name="addition-info"
                     rows={3}
-                    className="border w-[300px] ml-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
-                    placeholder="Vosita haqida qo’shimcha ma’lumotni kiriting"
+                    className=" dark:bg-white dark:text-[#1B3B3C] border w-[300px] ml-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
+                    placeholder={t("add:add_info_input")}
                   ></textarea>
                 </div>
               </div>

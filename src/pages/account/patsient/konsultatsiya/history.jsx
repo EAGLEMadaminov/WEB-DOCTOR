@@ -9,10 +9,21 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
 import { useRouter } from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["register", "account"])),
+    },
+  };
+}
 
 function History() {
+  const { t } = useTranslation();
   const router = useRouter();
-  const [hasInfo, setHasInfo] = useState(true);
+  const [hasInfo, setHasInfo] = useState(false);
   const handleTavsiyahistoryBtn = () => {
     router.push("/account/patsient/konsultatsiya/history");
   };
@@ -24,6 +35,14 @@ function History() {
   };
   const showFormBtn = () => {};
 
+  const ChangeLangBtn = (e) => {
+    let lang = e.target.value;
+    if (lang === "ru") {
+      router.push("/ru/account/patsient/konsultatsiya/history");
+    } else {
+      window.location.pathname = "/account/patsient/konsultatsiya/history";
+    }
+  };
   return (
     <div className="h-[100vh]  bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
@@ -36,11 +55,10 @@ function History() {
             </p>
           </div>
           <div className="flex">
-            <div className="flex w-[111px] h-[36px] items-center relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
+            <div className="flex w-[111px] dark:text-[#1B3B3C] h-[36px] items-center relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
               <CiGlobe className="text-[#1BB7B5] text-xl" />
               <select
-                name=""
-                id=""
+                onChange={ChangeLangBtn}
                 style={{ WebkitAppearance: "none" }}
                 className="outline-none  bg-[#F5FAFB] px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
               >
@@ -53,7 +71,7 @@ function History() {
               onClick={handleExit}
               className="w-[200px] ml-[18px] flex py-[5px]  px-[18px]items-center h-[36px] text-[#FF0000] border rounded-[12px] border-[#D7E6E7]"
             >
-              <RxExit className="mx-2 my-auto" /> Akkuntdan chiqish
+              <RxExit className="mx-2 my-auto" /> {t("account:exit_account")}
             </button>
           </div>
         </div>
@@ -63,18 +81,20 @@ function History() {
           <div className="flex justify-between mt-7 mb-3">
             <div className="flex items-center">
               <button
-                className="flex items-center ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
+                className="flex items-center dark:text-[#1B3B3C] ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
                 onClick={GoToBackBtn}
               >
-                <BsArrowLeft className="mx-3" /> Orqaga qaytish
+                <BsArrowLeft className="mx-3" /> {t("account:go_back_btn")}
               </button>
-              <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">Tarix</h3>
+              <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
+                {t("account:history")}
+              </h3>
             </div>
           </div>
 
           {hasInfo ? (
             <div>
-              <div className=" text-center  mx-10">
+              <div className=" text-center dark:text-[#1B3B3C]  mx-10">
                 <h2 className="davolash-line w-[875px] mx-10">22.05.2023</h2>
               </div>
 
@@ -86,11 +106,11 @@ function History() {
                   <div className="flex items-center mb-2">
                     <div className="bg-[url('../images/konsultatsiya/doctor.png')] object-cover bg-center bg-no-repeat w-8 h-8"></div>
                     <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                      Kardiolog bilan konsultatsiya
+                      {t("account:consult_with")}
                     </p>
                   </div>
 
-                  <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
+                  <div className=" dark:text-[#1B3B3C] flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
                     <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
                     <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
                     <p>12:00</p>
@@ -104,10 +124,10 @@ function History() {
                   <div className="flex items-center mb-2">
                     <div className="bg-[url('../images/konsultatsiya/doctor.png')] bg-no-repeat w-8 h-8"></div>
                     <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                      Kardiolog bilan konsultatsiya
+                      {t("account:consult_with")}
                     </p>
                   </div>
-                  <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
+                  <div className="dark:text-[#1B3B3C] flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
                     <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
                     <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
                     <p>12:00</p>
@@ -121,11 +141,11 @@ function History() {
                   <div className="flex items-center mb-2">
                     <div className="bg-[url('../images/konsultatsiya/doctor.png')] bg-no-repeat w-8 h-8"></div>
                     <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                      Kardiolog bilan konsultatsiya
+                      {t("account:consult_with")}
                     </p>
                   </div>
 
-                  <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
+                  <div className="flex dark:text-[#1B3B3C] items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
                     <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
                     <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
                     <p>12:00</p>
@@ -136,9 +156,7 @@ function History() {
           ) : (
             <div className="w-[194px] text-center mx-auto my-[120px]">
               <span className="block bg-[url('../images/davolash/history.png')] mx-auto w-20 h-20 bg-center rounded-[80px] bg-[#EAF9FB] bg-no-repeat"></span>
-              <p className="text-[#759495]">
-                Xozircha hech qanday narsa topilmadi!
-              </p>
+              <p className="text-[#759495]">{t("account:no-info")}</p>
             </div>
           )}
         </div>
