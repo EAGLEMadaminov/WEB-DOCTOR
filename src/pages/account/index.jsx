@@ -21,8 +21,12 @@ export async function getStaticProps({ locale }) {
 function Account() {
   const { t } = useTranslation();
   const router = useRouter();
+  const url = router.pathname;
   const [showInfo, setShowInfo] = useState(true);
-
+  const [langValue, setLangValue] = useState("");
+  if (url === "/ru/account") {
+    setLangValue("ru");
+  }
   const EnterPatsientBtn = () => {
     router.push("account/patsient");
   };
@@ -41,20 +45,21 @@ function Account() {
   };
   return (
     <div className="h-[110vh]  bg-[#F7FEFE]">
-      <div className="w-[1035px] mx-auto">
+      <div className="lg:w-[1035px] w-[300px] sm:w-[500px] md:w-[800px]  mx-auto">
         {/* head */}
-        <div className="flex h-[60px] pt-9 justify-between">
+        <div className="flex h-[60px] pt-9 justify-center md:justify-between flex-wrap mb-4 items-center">
           <div className="flex">
             <Image src={img} width={50} height={50} alt="site logo" />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
           </div>
-          <div className="flex">
+          <div className="flex ">
             <div className="flex w-[111px] h-[36px] items-center dark:text-[#1B3B3C] relative justify-between border border-[#D7E6E7] px-2 rounded-[12px]">
               <CiGlobe className="text-[#1BB7B5] text-xl" />
               <select
                 onChange={ChangeLangBtn}
+                value={langValue}
                 style={{ WebkitAppearance: "none" }}
                 className="outline-none  bg-[#F5FAFB]  px-2 absolute ml-7 pr-10  bg-transparent font-[500] "
               >
@@ -65,7 +70,7 @@ function Account() {
             </div>
             <button
               onClick={handleExit}
-              className="w-[200px] ml-[18px] flex py-[5px]  px-[18px]items-center h-[36px] text-[#FF0000] border rounded-[12px] border-[#D7E6E7]"
+              className="w-[200px]  ml-[18px] flex py-[5px]  px-[18px]items-center h-[36px] text-[#FF0000] border rounded-[12px] border-[#D7E6E7]"
             >
               <RxExit className="mx-2 my-auto" /> {t("account:exit_account")}
             </button>
@@ -90,8 +95,8 @@ function Account() {
             <div className="bg-[url('../images/account/account-right.png')] bg-no-repeat w-[207px] h-[271px] mt-10 mr-16"></div>
           </div>
 
-          <div className="flex justify-between">
-            <div className="w-[458px] ml-10 flex px-4 py-2 border border-[#E9F6F7] rounded-[18px] bg-[#F8FEFE]">
+          <div className="flex justify-between flex-wrap">
+            <div className="lg:w-[458px] w-[300px] mdw-[350px] ml-10 flex sm:px-1 px-4 py-2 border border-[#E9F6F7] rounded-[18px] bg-[#F8FEFE]">
               <div className="w-14 h-14 bg-[#E9F9FB] bg-center rounded-[56px] bg-[url('../images/account/suitcase.png')] bg-no-repeat ">
                 <span className="block "></span>
               </div>
@@ -103,7 +108,7 @@ function Account() {
               </div>
             </div>
 
-            <div className="w-[458px] mr-10 flex px-4 py-2 border border-[#E9F6F7] rounded-[18px] bg-[#F8FEFE]">
+            <div className="w-[300px] md:w-[350px] lg:w-[458px] mr-10 flex px-4 py-2 border border-[#E9F6F7] rounded-[18px] bg-[#F8FEFE]">
               <div className="w-14 h-14 bg-[#E9F9FB] flex items-center justify-center rounded-[56px]  ">
                 <MdOutlineBadge className="text-2xl text-[#1BB7B5]" />
                 <span className="block "></span>
@@ -125,7 +130,7 @@ function Account() {
               <form
                 action=""
                 onClick={(e) => e.preventDefault()}
-                className="flex items-end"
+                className="flex items-end flex-wrap sm:items-center justify-center"
               >
                 <div className="flex flex-col">
                   <label className="text-[#759495] mb-[10px]" htmlFor="date">
@@ -135,7 +140,7 @@ function Account() {
                     type="text"
                     name="date"
                     placeholder="06.05.2023"
-                    className="w-[305px] border dark:text-black outline-none dark:bg-white bg-[#F8FCFC] p-2 border-[#D7E6E7] rounded-[12px]"
+                    className="lg:w-[305px] w-[220px] border dark:text-black outline-none dark:bg-white bg-[#F8FCFC] p-2 border-[#D7E6E7] rounded-[12px]"
                   />
                 </div>
                 <div className="flex flex-col ml-5">
@@ -148,12 +153,12 @@ function Account() {
                   <input
                     type="text"
                     placeholder="AA7707787"
-                    className="w-[305px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white dark:text-black border-[#D7E6E7] rounded-[12px]"
+                    className="lg:w-[305px] w-[220px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white dark:text-black border-[#D7E6E7] rounded-[12px]"
                   />
                 </div>
                 {showInfo ? (
                   <button
-                    className="text-white ml-5 p-2  justify-between flex w-[300px] rounded-[12px] mt-3  bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
+                    className="text-white ml-5 p-2  justify-between flex w-[220px] lg:w-[300px] rounded-[12px] mt-3  bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
                     onClick={EnterPatsientBtn}
                   >
                     {t("account:pattsient_btn")}

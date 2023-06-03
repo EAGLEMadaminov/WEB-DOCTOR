@@ -1,1 +1,9 @@
-{"autorization_btn":"Ro'yhatdan o'tish","enter":"Kirish","enter_system":"Tizimga kirish","input_login":"Loginni kiriting","lang":"UZ","login":"Login (Passport seriya)","parol":"Parol"}
+{
+  "autorization_btn": "Ro'yhatdan o'tish",
+  "enter": "Kirish",
+  "enter_system": "Tizimga kirish",
+  "input_login": "Loginni kiriting",
+  "lang": "UZ",
+  "login": "Login (Passport seriya)",
+  "parol": "Parol"
+}

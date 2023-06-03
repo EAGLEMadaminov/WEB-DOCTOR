@@ -38,8 +38,8 @@ function Add() {
   const handleShowDregBtn = () => {
     if (showDrugList) {
       setShowDrgList(false);
-      setBtnBorder("8px");
       setHideBtnBorder("1px");
+      setBtnBorder("8px");
     } else {
       setShowDrgList(true);
       setBtnBorder("0px");
@@ -193,7 +193,7 @@ function Add() {
                               <div className="text-left flex">
                                 <div className="text-[14px] text-[#759495] rounded-bl-[18px]  font-[400] w-[200px] border border-[#D7E6E7] p-2 ">
                                   <button
-                                    className={`flex  items-center ml-1 w-[100%] border border-[#D7E6E7] rounded-b-[${btnBorder}]  border-b-[${hideBtnBorder}] px-2  py-1 rounded-[8px] `}
+                                    className={`flex  items-center ml-1 w-[100%] border rounded-b-[${btnBorder}] border-[#D7E6E7]  px-2  py-1 rounded-[8px] `}
                                     onClick={handleShowDregBtn}
                                     type="button"
                                   >
@@ -202,7 +202,7 @@ function Add() {
                                   </button>
                                   {showDrugList ? (
                                     <div>
-                                      <div className="flex  items-center justify-between ml-1 pt-2 mr-[1px]  border border-t-0">
+                                      <div className="flex  items-center justify-between ml-1 w-[100%] pt-2 mr-[1px]  border border-t-0">
                                         <AiOutlineSearch className=" text-[20px]" />
                                         <input
                                           type="search"
@@ -211,32 +211,30 @@ function Add() {
                                           onClick={() => console.log("sales")}
                                         />
                                       </div>
-                                      <ul
-                                        className="border border-t-0 rounded-b-[8px] mx-1 px-1  mr-[1px]"
-                                        onClick={(e) =>
-                                          console.log(e.target.textContent)
-                                        }
+                                      <select
+                                        className="border border-t-0  rounded-b-[8px] mx-1 px-1  mr-[1px]"
+                                        onClick={() => handleShowDregBtn}
                                       >
-                                        <li
+                                        <option
                                           className="parasetamol flex py-2"
                                           value={"parasetomol"}
                                         >
                                           <span className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></span>
                                           {t("add:first_drug")}
-                                        </li>
-                                        <li className="aspirin flex py-2">
+                                        </option>
+                                        <option className="aspirin flex py-2">
                                           <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
                                           {t("add:second_drug")}
-                                        </li>
-                                        <li className="Kyupen flex py-2">
+                                        </option>
+                                        <option className="Kyupen flex py-2">
                                           <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
                                           {t("add:third_drug")}
-                                        </li>
-                                        <li className="Kyupen flex py-2">
+                                        </option>
+                                        <option className="Kyupen flex py-2">
                                           <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
                                           {t("add:third_drug")}
-                                        </li>
-                                      </ul>
+                                        </option>
+                                      </select>
                                     </div>
                                   ) : (
                                     ""

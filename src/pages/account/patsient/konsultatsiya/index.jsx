@@ -23,7 +23,7 @@ export async function getStaticProps({ locale }) {
 function Kansultatsiya() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [hasInfo, setHasInfo] = useState(false);
+  const [hasInfo, setHasInfo] = useState(true);
   const handleTavsiyahistoryBtn = () => {
     router.push("/account/patsient/konsultatsiya/history");
   };

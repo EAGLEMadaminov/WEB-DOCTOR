@@ -13,6 +13,8 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { useGlobalContext } from "@/context";
+import Modal from "@/components/Davolash/modal";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -24,9 +26,9 @@ export async function getStaticProps({ locale }) {
 
 function Davolash() {
   const { t } = useTranslation();
+  const { showModal, setShowModal } = useGlobalContext();
 
   const router = useRouter();
-  const [showForm, setShowForm] = useState(false);
 
   const handleDavohistoryBtn = () => {
     router.push("/account/patsient/davolash/history");
@@ -37,7 +39,9 @@ function Davolash() {
   const handleExit = () => {
     window.location.pathname = "";
   };
-  const showFormBtn = () => {};
+  const showFormBtn = () => {
+    setShowModal(true);
+  };
 
   const addNewBtn = () => {
     router.push("/account/patsient/davolash/add");
@@ -121,6 +125,7 @@ function Davolash() {
           </div>
 
           <div className="flex mx-10 mt-5 mb-20">
+            {showModal ? <Modal /> : ""}
             <div
               className="border rounded-[12px] p-3 flex shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px] cursor-pointer "
               onClick={showFormBtn}

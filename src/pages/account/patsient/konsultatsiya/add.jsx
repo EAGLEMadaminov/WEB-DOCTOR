@@ -13,6 +13,8 @@ import { BiChevronDown } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { useGlobalContext } from "@/context";
+import KonsultatsiyaModal from "@/components/Konsultatsiya/modal";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -23,6 +25,7 @@ export async function getStaticProps({ locale }) {
 }
 
 function Add() {
+  const { konModal, setKonModal } = useGlobalContext();
   const { t } = useTranslation();
   const router = useRouter();
   const [startDate, setStartDate] = useState(new Date());
@@ -89,7 +92,6 @@ function Add() {
             </button>
           </div>
         </div>
-
         {/* body  */}
         <form action="" method="post" onClick={(e) => e.preventDefault()}>
           <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
@@ -109,12 +111,14 @@ function Add() {
                 <button
                   type="submit"
                   className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
+                  onClick={() => setKonModal(true)}
                 >
                   <BsCheck2 className="mr-3" />
                   {t("add:save")}
                 </button>
               </div>
             </div>
+            {konModal ? <KonsultatsiyaModal /> : ""}
 
             <div className="mx-6 mt-10 rounded-[18px] border border-[#D7E6E7] relative">
               <div className="flex">

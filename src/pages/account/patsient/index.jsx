@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import img from "../../../images/cite-logo.png";
 import { FiChevronDown } from "react-icons/fi";
@@ -57,7 +57,7 @@ function Patsient() {
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} />
+            <Image src={img} width={50} height={50} alt="logo"/>
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
