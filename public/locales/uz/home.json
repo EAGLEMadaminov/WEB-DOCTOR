@@ -5,5 +5,6 @@
   "input_login": "Loginni kiriting",
   "lang": "UZ",
   "login": "Login (Passport seriya)",
-  "parol": "Parol"
+  "parol": "Parol",
+  "resInfo": "Login yoki parol xato kiritilgan. Qayta urinib ko'ring!"
 }

@@ -15,22 +15,46 @@ export async function getStaticProps({ locale }) {
   };
 }
 export default function Home(props) {
-  const response = fetch("https://vitainline.uz/api/v1/auth/signin/doctor");
-  const jsonData = response.json();
-  console.log(jsonData);
   // const {isEmpty, data}=getFormValues()
   const { t } = useTranslation();
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
+  const [resInfo, setResInfo] = useState("");
 
   const handleEnterList = (e) => {
     e.preventDefault();
-    // window.location.pathname='/register'
+    window.location.pathname = "/register";
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formData = new FormData(
       document.getElementById("my-awesome-dropzone")
     );
     const data = Object.fromEntries(formData);
-    console.log(typeof data.password);
+    const response = await fetch(
+      "https://vitainline.uz/api/v1/auth/signin/doctor",
+      {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    console.log(response);
+    if (response.status == 200) {
+      window.location.pathname = "account";
+    } else {
+      if (window.location.pathname === "uz") {
+        setResInfo("Logn yoki parol xato kiritilgan. Qayta urinib ko'ring!");
+      } else {
+        setResInfo("Логин или пароль введен неверно. Попробуйте еще раз!");
+      }
+    }
     const values = [...formData.values()];
     const isEmpty = values.includes("");
 
@@ -79,11 +103,13 @@ export default function Home(props) {
             {t("home:enter_system")} <span className="text-[#1BB7B5]"></span>
           </h2>
           <h1 className="z-[3] text-black">{props.locale}</h1>
+          <p className="text-red-400 w-[250px] md:w-[350px]  lg:w-[430px]">{resInfo}</p>
           <form
             action="https://vitainline.uz/api/v1/auth/signin/doctor"
             className="w-full flex flex-col "
             autoComplete="off"
             id="my-awesome-dropzone"
+            onClick={handleSubmit}
             method="POST"
           >
             <label htmlFor="login" className="mt-[10px] mb-2 text-[#759495]">

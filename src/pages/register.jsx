@@ -20,11 +20,28 @@ export default function Register() {
   const [secondInput, setSecondInput] = useState("password");
   const [show, setShow] = useState(false);
 
-  const EnterAppBtn = (e) => {
+  const EnterAppBtn = async (e) => {
     e.preventDefault();
-    window.location.pathname = "account";
-    const formFata = new FormData(e.currentTarget);
-    console.log(formFata);
+    const formData = new FormData(document.getElementById("form-data"));
+    const data = Object.fromEntries(formData);
+    console.log(data);
+    const response = await fetch(
+      "https://vitainline.uz/api/v1/auth/signup/doctor",
+      {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    console.log(response);
+    if (response.status == 200) {
+      window.location.pathname = "account";
+    }
   };
 
   const handleClick = () => {
@@ -32,7 +49,7 @@ export default function Register() {
   };
   return (
     <div className="bg-[#F7FEFE] flex justify-center  h-[115vh] dark:bg-[#F7FEFE]">
-      <form className="mt-[20px] text-[12px]">
+      <form className="mt-[20px] text-[12px]" id="form-data">
         <div className="w-[300px] md:w-[350px] lg:w-[450px] ">
           <h1 className="text-[24px] text-center font-[500] text-[#1B3B3C] ">
             {t("register:register_list")}
@@ -106,6 +123,7 @@ export default function Register() {
                 </label>
                 <input
                   type="text"
+                  name="fullname"
                   required
                   placeholder={t("register:name_input")}
                   className="w-full outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8] dark:bg-white dark:text-black"
@@ -122,6 +140,7 @@ export default function Register() {
                     peekNextMonth
                     showMonthDropdown
                     showYearDropdown
+                    name="birthday"
                     dropdownMode="select"
                     className="bg-[#F8FCFC] dark:bg-white active:bg-white customDatePicker border-none w-full  dark:text-black "
                     customStyles={{ dateInput: { borderWidth: 0 } }}
@@ -138,11 +157,11 @@ export default function Register() {
                   placeholder="(AA 2314658)"
                   className="outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8] dark:bg-white dark:text-black"
                 />
-                <label htmlFor="city" className="mt-3">
+                <label htmlFor="province" className="mt-3">
                   {t("register:cities")}
                 </label>
                 <select
-                  name="city"
+                  name="province"
                   id=""
                   className="bg-[#F8FCFC] p-2 outline-none border rounded-[12px] boder-[#D7E6E7] dark:bg-white dark:text-black"
                 >
@@ -160,32 +179,32 @@ export default function Register() {
                   <option value="sir">{t("register:sirdaryo")}</option>
                   <option value="sur">{t("register:surxon")}</option>
                 </select>
-                <label htmlFor="major" className="mt-3">
+                <label htmlFor="specialty" className="mt-3">
                   {t("register:major")}
                 </label>
                 <input
                   type="text"
                   placeholder={t("register:job")}
-                  name="major"
+                  name="specialty"
                   required
                   className="outline-none rounded-[12px] dark:bg-white dark:text-black boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                 />
-                <label htmlFor="work-place" className="mt-3">
+                <label htmlFor="workplace" className="mt-3">
                   {t("register:job_place")}
                 </label>
                 <input
                   type="text"
-                  name="work-place"
+                  name="workplace"
                   placeholder={t("register:job_place_input")}
                   required
                   className="outline-none rounded-[12px] dark:bg-white dark:text-black boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                 />
-                <label htmlFor="degree" className="mt-3">
+                <label htmlFor="position" className="mt-3">
                   {t("register:position")}
                 </label>
                 <input
                   type="text"
-                  name="degree"
+                  name="position"
                   required
                   className="outline-none dark:bg-white dark:text-black rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                 />
@@ -194,14 +213,14 @@ export default function Register() {
                   +998
                   <input
                     type="number"
-                    name="phone-num"
+                    name="phone"
                     required
                     placeholder="-- --- -- --"
                     className="outline-none dark:bg-white dark:text-black bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                   />
                 </div>
                 <button
-                  type="submit"
+                  onClick={handleClick}
                   className="text-white rounded-[12px] text-[16px] mt-3 py-2 bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
                 >
                   {t("register:bottom_btn")}
