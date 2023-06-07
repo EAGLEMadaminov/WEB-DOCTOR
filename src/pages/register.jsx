@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { useGlobalContext } from "@/context.jsx";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -15,6 +16,7 @@ export async function getStaticProps({ locale }) {
 
 export default function Register() {
   const { t } = useTranslation();
+  const [formInfo, setFormInfo] = useState({});
   const [startDate, setStartDate] = useState();
   const [inputType, setInputType] = useState("password");
   const [secondInput, setSecondInput] = useState("password");
@@ -25,6 +27,7 @@ export default function Register() {
     const formData = new FormData(document.getElementById("form-data"));
     const data = Object.fromEntries(formData);
     console.log(data);
+    let allData = Object.assign(formInfo, data);
     const response = await fetch(
       "https://vitainline.uz/api/v1/auth/signup/doctor",
       {
@@ -35,16 +38,20 @@ export default function Register() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(allData),
       }
     );
     console.log(response);
-    if (response.status == 200) {
+    if (response.status == 201) {
       window.location.pathname = "account";
     }
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
+    const formData = new FormData(document.getElementById("form-data"));
+    const data = Object.fromEntries(formData);
+    setFormInfo(data);
     setShow(true);
   };
   return (

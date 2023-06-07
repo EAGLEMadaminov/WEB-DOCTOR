@@ -6,6 +6,7 @@ import { CiGlobe } from "react-icons/ci";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { UseTranslation, useTranslation } from "next-i18next";
 import getFormValues from "@/components/getFormValues";
+import { useGlobalContext } from "./context.jsx";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -15,7 +16,7 @@ export async function getStaticProps({ locale }) {
   };
 }
 export default function Home(props) {
-  // const {isEmpty, data}=getFormValues()
+  const { formInfo, setFormInfo } = useGlobalContext();
   const { t } = useTranslation();
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
@@ -25,36 +26,46 @@ export default function Home(props) {
     e.preventDefault();
     window.location.pathname = "/register";
   };
-
+  setFormInfo("salom");
+  console.log(formInfo);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(
       document.getElementById("my-awesome-dropzone")
     );
     const data = Object.fromEntries(formData);
-    const response = await fetch(
-      "https://vitainline.uz/api/v1/auth/signin/doctor",
-      {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    try {
+      const response = await fetch(
+        "https://vitainline.uz/api/v1/auth/signin/doctor",
+        {
+          method: "POST",
+          mode: "cors",
+          cache: "no-cache",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+    } catch (error) {
+      return setResInfo("Iltimos internetga ulanganingizni tekshiring!");
+    }
     console.log(response);
+    console.log(window.location.pathname);
     if (response.status == 200) {
       window.location.pathname = "account";
     } else {
-      if (window.location.pathname === "uz") {
-        setResInfo("Logn yoki parol xato kiritilgan. Qayta urinib ko'ring!");
-      } else {
+      if (window.location.pathname === "/ru") {
         setResInfo("Логин или пароль введен неверно. Попробуйте еще раз!");
+      } else {
+        setResInfo("Login yoki parol xato kiritilgan. Qayta urinib ko'ring!");
       }
     }
+    setTimeout(() => {
+      setResInfo("");
+    }, 5000);
+
     const values = [...formData.values()];
     const isEmpty = values.includes("");
 
@@ -103,7 +114,9 @@ export default function Home(props) {
             {t("home:enter_system")} <span className="text-[#1BB7B5]"></span>
           </h2>
           <h1 className="z-[3] text-black">{props.locale}</h1>
-          <p className="text-red-400 w-[250px] md:w-[350px]  lg:w-[430px]">{resInfo}</p>
+          <p className="text-center text-red-400 w-[250px] md:w-[350px]  lg:w-[430px]">
+            {resInfo}
+          </p>
           <form
             action="https://vitainline.uz/api/v1/auth/signin/doctor"
             className="w-full flex flex-col "

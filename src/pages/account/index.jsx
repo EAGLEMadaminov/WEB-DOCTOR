@@ -10,6 +10,8 @@ import { CiGlobe } from "react-icons/ci";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import ReactDatePicker from "react-datepicker";
+import { Formik } from "formik";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -22,8 +24,30 @@ function Account() {
   const { t } = useTranslation();
   const router = useRouter();
   const url = router.pathname;
-  const [showInfo, setShowInfo] = useState(true);
+  const [startDate, setStartDate] = useState(new Date());
+  const [patsientName, setPatsientName] = useState("");
+  const [showInfo, setShowInfo] = useState(false);
   const [langValue, setLangValue] = useState("");
+
+  const fetchFunck = async () => {
+    const singResponse = await fetch("https://vitainline.uz/api/v1/auth/user", {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        access_token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjZGIzZmQyLTgwYWQtNGVlYS1iMTFjLWMxYTQzMWU0Yjg1MCIsImlhdCI6MTY4NTUwNjEzMiwiZXhwIjoxNjg1NTA5NzMyfQ.KUboR8TStXZMkQXE7mqP4S_GJ1990m97NXn0QhsYWUU",
+        token_type: "Bearer",
+        expires_in: 3600,
+      },
+    });
+    const jsonData = await singResponse.json();
+    console.log(jsonData);
+  };
+  fetchFunck();
+
   if (url === "/ru/account") {
     setLangValue("ru");
   }
@@ -41,6 +65,33 @@ function Account() {
       router.push("/ru/account");
     } else {
       window.location.pathname = "/account";
+    }
+  };
+
+  const handleChangeInput = async () => {
+    const formData = new FormData(document.getElementById("patsient-form"));
+    const data = Object.fromEntries(formData);
+    console.log(data);
+
+    const response = await fetch(
+      "https://vitainline.uz/api/v1/auth/signin/patient",
+      {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    const info = await response.json();
+
+    if (response.status === 200) {
+      setPatsientName(info.data.fullname);
+      setShowInfo(true);
     }
   };
   return (
@@ -129,18 +180,22 @@ function Account() {
             <div className="flex items-end">
               <form
                 action=""
+                id="patsient-form"
                 onClick={(e) => e.preventDefault()}
                 className="flex items-end flex-wrap sm:items-center justify-center"
               >
                 <div className="flex flex-col">
-                  <label className="text-[#759495] mb-[10px]" htmlFor="date">
+                  <label className="text-[#759495] mb-[10px]" htmlFor="">
                     {t("account:birth_date")}
                   </label>
-                  <input
-                    type="text"
-                    name="date"
-                    placeholder="06.05.2023"
-                    className="lg:w-[305px] w-[220px] border dark:text-black outline-none dark:bg-white bg-[#F8FCFC] p-2 border-[#D7E6E7] rounded-[12px]"
+                  <ReactDatePicker
+                    selected={startDate}
+                    name="birthday"
+                    popperClassName="some-custom-class"
+                    popperPlacement="top-end"
+                    dateFormat="dd.MM.yyyy"
+                    onChange={(date) => setStartDate(date)}
+                    className="bg-transparent lg:w-[305px] w-[220px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white text-[#759495] border-[#D7E6E7] rounded-[12px]"
                   />
                 </div>
                 <div className="flex flex-col ml-5">
@@ -152,13 +207,15 @@ function Account() {
                   </label>
                   <input
                     type="text"
+                    name="passport"
                     placeholder="AA7707787"
+                    onChange={handleChangeInput}
                     className="lg:w-[305px] w-[220px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white dark:text-black border-[#D7E6E7] rounded-[12px]"
                   />
                 </div>
                 {showInfo ? (
                   <button
-                    className="text-white ml-5 p-2  justify-between flex w-[220px] lg:w-[300px] rounded-[12px] mt-3  bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
+                    className="text-white ml-5 p-2   justify-between flex w-[220px] lg:w-[300px] rounded-[12px] mt-8  bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
                     onClick={EnterPatsientBtn}
                   >
                     {t("account:pattsient_btn")}
@@ -172,9 +229,7 @@ function Account() {
             {showInfo ? (
               <div className="flex items-center my-5">
                 <IoMdPerson className="text-[#759495]" />
-                <p className="ml-3 text-[#1B3B3C]">
-                  Eshonov Fakhriyor Farxodbek o&apos;g&apos;li
-                </p>
+                <p className="ml-3 text-[#1B3B3C]">{patsientName}</p>
               </div>
             ) : (
               ""
