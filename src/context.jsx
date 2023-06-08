@@ -5,9 +5,20 @@ const Appcontext = React.createContext();
 const AppProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [konModal, setKonModal] = useState(false);
+  const [formInfo, setFormInfo] = useState({});
+  const [token, setToken] = useState("");
   return (
     <Appcontext.Provider
-      value={{ showModal, setShowModal, konModal, setKonModal }}
+      value={{
+        showModal,
+        setShowModal,
+        konModal,
+        setKonModal,
+        formInfo,
+        setFormInfo,
+        token,
+        setToken,
+      }}
     >
       {children}
     </Appcontext.Provider>

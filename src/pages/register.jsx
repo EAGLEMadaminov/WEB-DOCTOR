@@ -41,7 +41,6 @@ export default function Register() {
         body: JSON.stringify(allData),
       }
     );
-    console.log(response);
     if (response.status == 201) {
       window.location.pathname = "account";
     }

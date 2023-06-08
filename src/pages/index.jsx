@@ -1,12 +1,12 @@
 import Head from "next/head";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/router";
 import { FiChevronDown } from "react-icons/fi";
 import { CiGlobe } from "react-icons/ci";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { UseTranslation, useTranslation } from "next-i18next";
 import getFormValues from "@/components/getFormValues";
-import { useGlobalContext } from "./context.jsx";
+import { useGlobalContext } from "@/context.jsx";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -15,64 +15,54 @@ export async function getStaticProps({ locale }) {
     },
   };
 }
+
 export default function Home(props) {
-  const { formInfo, setFormInfo } = useGlobalContext();
   const { t } = useTranslation();
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
   const [resInfo, setResInfo] = useState("");
+  const { formInfo, setFormInfo, token, setToken } = useGlobalContext();
 
   const handleEnterList = (e) => {
     e.preventDefault();
     window.location.pathname = "/register";
   };
-  setFormInfo("salom");
-  console.log(formInfo);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(
       document.getElementById("my-awesome-dropzone")
     );
     const data = Object.fromEntries(formData);
-    try {
-      const response = await fetch(
-        "https://vitainline.uz/api/v1/auth/signin/doctor",
-        {
-          method: "POST",
-          mode: "cors",
-          cache: "no-cache",
-          credentials: "same-origin",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-    } catch (error) {
-      return setResInfo("Iltimos internetga ulanganingizni tekshiring!");
-    }
-    console.log(response);
-    console.log(window.location.pathname);
-    if (response.status == 200) {
-      window.location.pathname = "account";
-    } else {
-      if (window.location.pathname === "/ru") {
-        setResInfo("Логин или пароль введен неверно. Попробуйте еще раз!");
-      } else {
-        setResInfo("Login yoki parol xato kiritilgan. Qayta urinib ko'ring!");
+
+    const response = await fetch(
+      "https://vitainline.uz/api/v1/auth/signin/doctor",
+      {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       }
-    }
-    setTimeout(() => {
-      setResInfo("");
-    }, 5000);
+    );
 
-    const values = [...formData.values()];
-    const isEmpty = values.includes("");
-
-    if (isEmpty) {
-      console.log("please provide all values");
-      return;
-    }
+    let info = await response.json();
+    console.log(token);
+    setToken(info.token);
+    // if (response.status == 200) {
+    //   window.location.pathname = "account";
+    // } else {
+    //   if (window.location.pathname === "/ru") {
+    //     setResInfo("Логин или пароль введен неверно. Попробуйте еще раз!");
+    //   } else {
+    //     setResInfo("Login yoki parol xato kiritilgan. Qayta urinib ko'ring!");
+    //   }
+    // }
+    // setTimeout(() => {
+    //   setResInfo("");
+    // }, 5000);
   };
 
   const ChangeLangBtn = (e) => {

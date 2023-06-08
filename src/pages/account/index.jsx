@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import img from "../../images/cite-logo.png";
 import { FiChevronDown } from "react-icons/fi";
@@ -12,6 +12,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import ReactDatePicker from "react-datepicker";
 import { Formik } from "formik";
+import { useGlobalContext } from "@/context.jsx";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -28,7 +29,9 @@ function Account() {
   const [patsientName, setPatsientName] = useState("");
   const [showInfo, setShowInfo] = useState(false);
   const [langValue, setLangValue] = useState("");
+  const { formInfo, token } = useGlobalContext();
 
+  console.log(token);
   const fetchFunck = async () => {
     const singResponse = await fetch("https://vitainline.uz/api/v1/auth/user", {
       method: "POST",
@@ -37,8 +40,7 @@ function Account() {
       credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
-        access_token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjZGIzZmQyLTgwYWQtNGVlYS1iMTFjLWMxYTQzMWU0Yjg1MCIsImlhdCI6MTY4NTUwNjEzMiwiZXhwIjoxNjg1NTA5NzMyfQ.KUboR8TStXZMkQXE7mqP4S_GJ1990m97NXn0QhsYWUU",
+        access_token: `${token}`,
         token_type: "Bearer",
         expires_in: 3600,
       },
@@ -46,6 +48,7 @@ function Account() {
     const jsonData = await singResponse.json();
     console.log(jsonData);
   };
+
   fetchFunck();
 
   if (url === "/ru/account") {
