@@ -51,6 +51,7 @@ module.exports = {
         "100%": "100%",
         16: "4rem",
       },
+      
       boxShadow: {
         patsient: "0px 6px 16px #EFF4F4",
       },

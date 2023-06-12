@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,18 +16,28 @@ export async function getStaticProps({ locale }) {
 
 export default function Register() {
   const { t } = useTranslation();
-  const [formInfo, setFormInfo] = useState({});
   const [startDate, setStartDate] = useState();
   const [inputType, setInputType] = useState("password");
   const [secondInput, setSecondInput] = useState("password");
-  const [show, setShow] = useState(false);
+  const { registerInfo, setRegisterInfo, show, setFormInfo, setShow } =
+    useGlobalContext();
 
-  const EnterAppBtn = async (e) => {
+  let allData;
+  const formSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(document.getElementById("form-data"));
     const data = Object.fromEntries(formData);
-    console.log(data);
-    let allData = Object.assign(formInfo, data);
+    setFormInfo(data);
+    setShow(true);
+  };
+
+  const EnterAppBtn = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(document.querySelector("#form-data"));
+    const data = Object.fromEntries(formData);
+    allData = Object.assign(formInfo, data);
+    setRegisterInfo(allData);
+
     const response = await fetch(
       "https://vitainline.uz/api/v1/auth/signup/doctor",
       {
@@ -41,18 +51,19 @@ export default function Register() {
         body: JSON.stringify(allData),
       }
     );
+
+    const info = await response.json();
     if (response.status == 201) {
+      localStorage.setItem("id", info.data.id);
       window.location.pathname = "account";
     }
   };
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    const formData = new FormData(document.getElementById("form-data"));
-    const data = Object.fromEntries(formData);
-    setFormInfo(data);
-    setShow(true);
-  };
+  useEffect(() => {
+    setRegisterInfo(allData);
+    console.log(registerInfo);
+  }, [registerInfo]);
+
   return (
     <div className="bg-[#F7FEFE] flex justify-center  h-[115vh] dark:bg-[#F7FEFE]">
       <form className="mt-[20px] text-[12px]" id="form-data">
@@ -226,7 +237,7 @@ export default function Register() {
                   />
                 </div>
                 <button
-                  onClick={handleClick}
+                  onClick={formSubmit}
                   className="text-white rounded-[12px] text-[16px] mt-3 py-2 bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
                 >
                   {t("register:bottom_btn")}

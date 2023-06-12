@@ -13,6 +13,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { useGlobalContext } from "@/context";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -23,9 +24,28 @@ export async function getStaticProps({ locale }) {
 }
 
 function Patsient() {
+  const [patsientInfo, setPatsientInfo] = useState("");
   const { t } = useTranslation();
+  const { registerInfo } = useGlobalContext();
   const router = useRouter();
+  const fetchFunck = async () => {
+    let token = localStorage.getItem("ptoken");
+    const singResponse = await fetch("https://vitainline.uz/api/v1/auth/user", {
+      method: "GET",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const jsonData = await singResponse.json();
 
+    setPatsientInfo(jsonData.data);
+  };
+
+  fetchFunck();
   const handleDavolash = () => {
     router.push("/account/patsient/davolash");
   };
@@ -57,7 +77,7 @@ function Patsient() {
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} alt="logo"/>
+            <Image src={img} width={50} height={50} alt="logo" />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
@@ -105,7 +125,7 @@ function Patsient() {
                 {t("account:patsient")}
               </p>
               <h2 className="text-[24px] text-[#1B3B3C] text-center">
-                E. F. Fakhriyor
+                {patsientInfo.fullname}
               </h2>
             </div>
 
@@ -119,7 +139,9 @@ function Patsient() {
               </div>
               <div className="ml-[18px] text-[#759495]">
                 <p>{t("account:birth_date")}</p>
-                <h3 className="text-[18px] text-[#1B3B3C]">25.08.1998</h3>
+                <h3 className="text-[18px] text-[#1B3B3C]">
+                  {patsientInfo.birthday}
+                </h3>
               </div>
             </div>
 
@@ -130,7 +152,7 @@ function Patsient() {
               <div className="ml-[18px] text-[#759495]">
                 <p>{t("register:cities")}</p>
                 <h3 className="text-[18px] text-[#1B3B3C]">
-                  Farg&apos;ona viloyati
+                  {patsientInfo.province} viloyati
                 </h3>
               </div>
             </div>
@@ -143,7 +165,7 @@ function Patsient() {
               <div className="ml-[18px] text-[#759495]">
                 <p>{t("register:job_place")}</p>
                 <h3 className="text-[18px] text-[#1B3B3C]">
-                  Thinkland Company
+                  {patsientInfo.workplace}
                 </h3>
               </div>
             </div>

@@ -7,6 +7,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { UseTranslation, useTranslation } from "next-i18next";
 import getFormValues from "@/components/getFormValues";
 import { useGlobalContext } from "@/context.jsx";
+import { Formik } from "formik";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -21,12 +22,13 @@ export default function Home(props) {
   const router = useRouter();
   const [inputType, setInputType] = useState("password");
   const [resInfo, setResInfo] = useState("");
-  const { formInfo, setFormInfo, token, setToken } = useGlobalContext();
+  const { formInfo, setFormInfo } = useGlobalContext();
 
   const handleEnterList = (e) => {
     e.preventDefault();
     window.location.pathname = "/register";
   };
+  let info;
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(
@@ -48,22 +50,29 @@ export default function Home(props) {
       }
     );
 
-    let info = await response.json();
-    console.log(token);
-    setToken(info.token);
-    // if (response.status == 200) {
-    //   window.location.pathname = "account";
-    // } else {
-    //   if (window.location.pathname === "/ru") {
-    //     setResInfo("Логин или пароль введен неверно. Попробуйте еще раз!");
-    //   } else {
-    //     setResInfo("Login yoki parol xato kiritilgan. Qayta urinib ko'ring!");
-    //   }
-    // }
-    // setTimeout(() => {
-    //   setResInfo("");
-    // }, 5000);
+    info = await response.json();
+    setFormInfo(info);
+    console.log(formInfo);
+    if (response.status == 200) {
+      localStorage.setItem("token", info.token);
+      window.location.pathname = "account";
+    } else {
+      if (window.location.pathname === "/ru") {
+        setResInfo("Логин или пароль введен неверно. Попробуйте еще раз!");
+      } else {
+        setResInfo("Login yoki parol xato kiritilgan. Qayta urinib ko'ring!");
+      }
+    }
+
+    setTimeout(() => {
+      setResInfo("");
+    }, 5000);
   };
+
+  // useEffect(() => {
+  //   setFormInfo(info);
+  //   console.log(formInfo);
+  // }, []);
 
   const ChangeLangBtn = (e) => {
     let lang = e.target.value;
@@ -112,7 +121,7 @@ export default function Home(props) {
             className="w-full flex flex-col "
             autoComplete="off"
             id="my-awesome-dropzone"
-            onClick={handleSubmit}
+            onSubmit={handleSubmit}
             method="POST"
           >
             <label htmlFor="login" className="mt-[10px] mb-2 text-[#759495]">

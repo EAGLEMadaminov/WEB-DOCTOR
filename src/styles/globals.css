@@ -8,11 +8,14 @@
     -webkit-appearance: none;
     margin: 0;
   }
+  input::-webkit-calendar-picker-indicator {
+    display: none !important;
+  }
 }
 @layer components {
   .davolash-line::after,
   .davolash-line::before {
-    background-color: #C5D7D8;
+    background-color: #c5d7d8;
     content: "";
     display: inline-block;
     height: 1px;

@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { registerLocale } from "react-datepicker";
 
 const Appcontext = React.createContext();
 
@@ -6,7 +7,9 @@ const AppProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [konModal, setKonModal] = useState(false);
   const [formInfo, setFormInfo] = useState({});
-  const [token, setToken] = useState("");
+  const [show, setShow] = useState(false);
+  const [registerInfo, setRegisterInfo] = useState("");
+
   return (
     <Appcontext.Provider
       value={{
@@ -16,8 +19,9 @@ const AppProvider = ({ children }) => {
         setKonModal,
         formInfo,
         setFormInfo,
-        token,
-        setToken,
+        registerInfo,
+        setRegisterInfo,
+        show,
       }}
     >
       {children}

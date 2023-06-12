@@ -1,9 +1,6 @@
-kirish
-main
-davolash
-tavsiyanoma
-consultatsiya
-add
+button bosilganda ichida search chiqadigan qilib form elementi yasash
+2 barcha form ichidagilarni backendga mos qilim FormDataga yig'ish
+davolash add ni apiga ulash
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

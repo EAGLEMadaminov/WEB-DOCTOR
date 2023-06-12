@@ -35,7 +35,8 @@ function Add() {
   const [drugsNum, setDrugsNum] = useState(4);
   const [numberEatDrug, setNumberEatDrug] = useState([1]);
 
-  const handleShowDregBtn = () => {
+  const handleShowDregBtn = (e) => {
+    console.log(e.target.textComntent);
     if (showDrugList) {
       setShowDrgList(false);
       setHideBtnBorder("1px");
@@ -48,6 +49,23 @@ function Add() {
   };
   const handleExit = () => {
     router.pathname = "";
+  };
+
+  const handleSubmitBtn = async () => {
+    const formData = new FormData(document.getElementById("healing-add"));
+    const data = Object.fromEntries(formData);
+    console.log(data);
+    const response = await fetch("https://vitainline.uz/api/v1/healings", {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    console.log(response);
   };
 
   const AddClock = () => {
@@ -119,7 +137,7 @@ function Add() {
 
         <Formik initialValues={{ drugs: ["paresatomol"] }}>
           {({ values }) => (
-            <Form action="https://echo.htmlacademy.ru" method="post">
+            <Form action="" method="post" id="healing-add">
               <FieldArray
                 name="drugs"
                 render={(arrayHelpers) => (
@@ -140,6 +158,7 @@ function Add() {
                         </div>
                         <div className="mr-10 flex items-center">
                           <button
+                            onSubmit={handleSubmitBtn}
                             type="submit"
                             className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
                           >
@@ -151,7 +170,7 @@ function Add() {
                       {values.drugs && values.drugs.length > 0
                         ? values.drugs.map((drug, index) => (
                             <div
-                              className="mx-6 mt-10 rounded-[18px] border border-[#D7E6E7] relative"
+                              className="mx-6 mt-10 rounded-[18px] border  border-[#D7E6E7] relative"
                               key={index}
                             >
                               <div className="text-left flex ">
@@ -186,11 +205,11 @@ function Add() {
                               <button
                                 type="button"
                                 className="absolute pl-1  ml-auto w-6 h-6 top-[-7px] right-[-7px] bg-white text-[#759495] rounded-[40px] border border-[#D7E6E7]  "
-                                onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+                                onClick={() => arrayHelpers.remove(index)} 
                               >
                                 <RxCross2 />
                               </button>
-                              <div className="text-left flex">
+                              <div className="text-left flex h-[250px]"  >
                                 <div className="text-[14px] text-[#759495] rounded-bl-[18px]  font-[400] w-[200px] border border-[#D7E6E7] p-2 ">
                                   <button
                                     className={`flex  items-center ml-1 w-[100%] border rounded-b-[${btnBorder}] border-[#D7E6E7]  px-2  py-1 rounded-[8px] `}
@@ -207,34 +226,43 @@ function Add() {
                                         <input
                                           type="search"
                                           placeholder={t("add:search")}
-                                          className="outline-none dark:bg-white dark:text-black  w-[140px]"
+                                          list="drugs"
+                                          className="outline-none dark:bg-white dark:text-black  w-[140px] bg-inherit first-letter 
+                                          "
                                           onClick={() => console.log("sales")}
                                         />
                                       </div>
-                                      <select
-                                        className="border border-t-0  rounded-b-[8px] mx-1 px-1  mr-[1px]"
+                                      <datalist
+                                        className="border border-t-0  rounded-b-[8px] mx-1 px-1  bg-inherit mr-[30px]"
                                         onClick={() => handleShowDregBtn}
+                                        name="pill"
+                                        id="drugs"
                                       >
                                         <option
                                           className="parasetamol flex py-2"
-                                          value={"parasetomol"}
+                                          value={t("add:first_drug")}
                                         >
-                                          <span className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></span>
-                                          {t("add:first_drug")}
-                                        </option>
-                                        <option className="aspirin flex py-2">
                                           <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
-                                          {t("add:second_drug")}
                                         </option>
-                                        <option className="Kyupen flex py-2">
+                                        <option
+                                          className="aspirin flex py-2"
+                                          value={t("add:second_drug")}
+                                        >
                                           <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
-                                          {t("add:third_drug")}
                                         </option>
-                                        <option className="Kyupen flex py-2">
+                                        <option
+                                          className="Kyupen flex py-2 border-[2px] border-black"
+                                          value={t("add:third_drug")}
+                                        >
                                           <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
-                                          {t("add:third_drug")}
                                         </option>
-                                      </select>
+                                        <option
+                                          className="Kyupen flex py-2 bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8 "
+                                          value={t("add:third_drug")}
+                                        >
+                                          <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
+                                        </option>
+                                      </datalist>
                                     </div>
                                   ) : (
                                     ""
@@ -252,6 +280,7 @@ function Add() {
                                           <div className="border border-[#D7E6E7] rounded-[12px] w-[77px] h-[34px] flex  justify-around items-center">
                                             <BsClock className="text-[#1BB7B5]" />
                                             <input
+                                              name="times"
                                               type="text"
                                               placeholder="00:00"
                                               className="w-9 h-3 outline-none dark:bg-white dark:text-black placeholder:text-[#C5D7D8]"

@@ -10,7 +10,7 @@ import { CiGlobe } from "react-icons/ci";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
-import ReactDatePicker from "react-datepicker";
+import DatePicker from "react-datepicker";
 import { Formik } from "formik";
 import { useGlobalContext } from "@/context.jsx";
 
@@ -29,27 +29,10 @@ function Account() {
   const [patsientName, setPatsientName] = useState("");
   const [showInfo, setShowInfo] = useState(false);
   const [langValue, setLangValue] = useState("");
-  const { formInfo, token } = useGlobalContext();
+  const { formInfo, setFormInfo, registerInfo } = useGlobalContext();
 
-  console.log(token);
-  const fetchFunck = async () => {
-    const singResponse = await fetch("https://vitainline.uz/api/v1/auth/user", {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-        access_token: `${token}`,
-        token_type: "Bearer",
-        expires_in: 3600,
-      },
-    });
-    const jsonData = await singResponse.json();
-    console.log(jsonData);
-  };
-
-  fetchFunck();
+  console.log(formInfo);
+  console.log(registerInfo);
 
   if (url === "/ru/account") {
     setLangValue("ru");
@@ -57,6 +40,31 @@ function Account() {
   const EnterPatsientBtn = () => {
     router.push("account/patsient");
   };
+
+  const fetchFunck = async () => {
+    let token = localStorage.getItem("token");
+
+    const singResponse = await fetch("https://vitainline.uz/api/v1/auth/user", {
+      method: "GET",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const jsonData = await singResponse.json();
+
+    if (registerInfo === "") {
+      setFormInfo(jsonData.data);
+    } else {
+      setFormInfo(registerInfo);
+    }
+  };
+
+  fetchFunck();
 
   const handleExit = () => {
     window.location.pathname = "";
@@ -91,6 +99,7 @@ function Account() {
     );
 
     const info = await response.json();
+    localStorage.setItem("ptoken", info.token);
 
     if (response.status === 200) {
       setPatsientName(info.data.fullname);
@@ -139,10 +148,10 @@ function Account() {
             <div className="text-center">
               <div className="w-[130px] mx-auto h-[130px] relative mt-[65px] rounded-[130px] border  place-items-center border-[#D7E6E7]  bg-[url('../images/account/account-person.png')] bg-no-repeat bg-bottom"></div>
               <p className="text-[18px] text-[#759495] text-center">
-                {t("account:major_doctor")}
+                {formInfo.specialty}
               </p>
               <h2 className="text-[32px] text-[#1B3B3C] text-center">
-                {t("account:doctor_name")}
+                {formInfo.fullname}
               </h2>
             </div>
 
@@ -157,7 +166,7 @@ function Account() {
               <div className="ml-[18px] text-[#759495]">
                 <p>{t("register:job_place")}</p>
                 <h3 className="text-[20pz] text-[#1B3B3C]">
-                  Medline Farg’ona filiali
+                  {formInfo.workplace}
                 </h3>
               </div>
             </div>
@@ -170,7 +179,7 @@ function Account() {
               <div className="ml-[18px] text-[#759495]">
                 <p>{t("register:position")}</p>
                 <h3 className="text-[20pz] text-[#1B3B3C]">
-                  Bosh vrach kardiolog
+                  {formInfo.position}
                 </h3>
               </div>
             </div>
@@ -191,14 +200,11 @@ function Account() {
                   <label className="text-[#759495] mb-[10px]" htmlFor="">
                     {t("account:birth_date")}
                   </label>
-                  <ReactDatePicker
-                    selected={startDate}
-                    name="birthday"
-                    popperClassName="some-custom-class"
-                    popperPlacement="top-end"
+                  <DatePicker
                     dateFormat="dd.MM.yyyy"
+                    selected={startDate}
                     onChange={(date) => setStartDate(date)}
-                    className="bg-transparent lg:w-[305px] w-[220px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white text-[#759495] border-[#D7E6E7] rounded-[12px]"
+                    className="lg:w-[305px]  w-[220px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white text-[#759495] border-[#D7E6E7] rounded-[12px]"
                   />
                 </div>
                 <div className="flex flex-col ml-5">
