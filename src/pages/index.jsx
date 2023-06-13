@@ -69,11 +69,6 @@ export default function Home(props) {
     }, 5000);
   };
 
-  // useEffect(() => {
-  //   setFormInfo(info);
-  //   console.log(formInfo);
-  // }, []);
-
   const ChangeLangBtn = (e) => {
     let lang = e.target.value;
     if (lang === "ru") {

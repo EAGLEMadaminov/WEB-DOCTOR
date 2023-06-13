@@ -6,8 +6,19 @@ const Appcontext = React.createContext();
 const AppProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [konModal, setKonModal] = useState(false);
-  const [formInfo, setFormInfo] = useState({});
-  const [show, setShow] = useState(false);
+
+  const inialValue = {
+    birthday: new Date(),
+    fullname: "",
+    passport: "",
+    password: "",
+    phone: "",
+    position: "",
+    province: "Tashkent",
+    specialty: "",
+    workplace: "",
+  };
+  const [formInfo, setFormInfo] = useState(inialValue);
   const [registerInfo, setRegisterInfo] = useState("");
 
   return (
@@ -21,7 +32,6 @@ const AppProvider = ({ children }) => {
         setFormInfo,
         registerInfo,
         setRegisterInfo,
-        show,
       }}
     >
       {children}

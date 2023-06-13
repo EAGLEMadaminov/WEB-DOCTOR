@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useGlobalContext } from "@/context.jsx";
+import { Formik } from "formik";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -14,43 +15,42 @@ export async function getStaticProps({ locale }) {
   };
 }
 
-export default function Register() {
+export default function Register(props) {
   const { t } = useTranslation();
   const [startDate, setStartDate] = useState();
   const [inputType, setInputType] = useState("password");
   const [secondInput, setSecondInput] = useState("password");
-  const { registerInfo, setRegisterInfo, show, setFormInfo, setShow } =
+  const [formErrors, setFormErrors] = useState({});
+  const [show, setShow] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const { registerInfo, setRegisterInfo, setFormInfo, formInfo } =
     useGlobalContext();
 
   let allData;
+  let response;
+
   const formSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(document.getElementById("form-data"));
-    const data = Object.fromEntries(formData);
-    setFormInfo(data);
-    setShow(true);
+    setFormErrors(validate2(formInfo));
+    if (formErrors) {
+      setShow(true);
+    }
   };
 
   const EnterAppBtn = async (e) => {
     e.preventDefault();
-    const formData = new FormData(document.querySelector("#form-data"));
-    const data = Object.fromEntries(formData);
-    allData = Object.assign(formInfo, data);
-    setRegisterInfo(allData);
-
-    const response = await fetch(
-      "https://vitainline.uz/api/v1/auth/signup/doctor",
-      {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(allData),
-      }
-    );
+    setIsSubmit(true);
+    setFormErrors(validate1(formInfo));
+    response = await fetch("https://vitainline.uz/api/v1/auth/signup/doctor", {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(allData),
+    });
 
     const info = await response.json();
     if (response.status == 201) {
@@ -58,12 +58,55 @@ export default function Register() {
       window.location.pathname = "account";
     }
   };
-
   useEffect(() => {
-    setRegisterInfo(allData);
-    console.log(registerInfo);
-  }, [registerInfo]);
+    console.log(formErrors);
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      console.log(formInfo);
+    }
+  }, [formErrors]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormInfo({ ...formInfo, [name]: value });
+    console.log(formInfo);
+  };
+  
+  const validate1 = (values) => {
+    const errors = {};
+    if (!values.password) {
+      errors.password = "Password is required!";
+    }
+    return errors;
+  };
+  const validate2 = (values) => {
+    const errors = {};
+
+    if (!values.fullname) {
+      errors.fullname = "Fullname is required!";
+    }
+    if (!values.birthday) {
+      errors.birthday = "Birthday is required!";
+    }
+    if (!values.passport) {
+      errors.passport = "P:assport is required!";
+    }
+    if (!values.phone) {
+      errors.phone = "Phone is required!";
+    }
+    if (!values.position) {
+      errors.position = "Position is required!";
+    }
+    if (!values.province) {
+      errors.province = "Province is required!";
+    }
+    if (!values.specialty) {
+      errors.specialty = "Specialty is required!";
+    }
+    if (!values.workplace) {
+      errors.fullname = "Fullname is required!";
+    }
+    return errors;
+  };
   return (
     <div className="bg-[#F7FEFE] flex justify-center  h-[115vh] dark:bg-[#F7FEFE]">
       <form className="mt-[20px] text-[12px]" id="form-data">
@@ -90,6 +133,8 @@ export default function Register() {
                   placeholder="************"
                   autoComplete="off"
                   required
+                  value={formInfo.password}
+                  onChange={handleChange}
                 />
                 <span
                   onClick={() => {
@@ -100,6 +145,7 @@ export default function Register() {
                   className="bg-[url('../images/glass.png')] mb-1 w-[22px] bg-no-repeat h-[14px] absolute right-4 top-3"
                 ></span>
               </div>
+              <p>{formErrors.password}</p>
               <label htmlFor="password" className="  mb-2 text-[#759495]">
                 {t("register:password_again")}
               </label>
@@ -111,6 +157,7 @@ export default function Register() {
                   placeholder="************"
                   autoComplete="off"
                   required
+                  onChange={handleChange}
                 />
                 <span
                   onClick={() => {
@@ -141,10 +188,13 @@ export default function Register() {
                 <input
                   type="text"
                   name="fullname"
+                  value={formInfo.fullname}
+                  onChange={handleChange}
                   required
                   placeholder={t("register:name_input")}
                   className="w-full outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8] dark:bg-white dark:text-black"
                 />
+                <p>{formErrors.fullname}</p>
                 <label htmlFor="data" className="mt-3 ">
                   {t("register:birth_date")}
                 </label>
@@ -153,10 +203,14 @@ export default function Register() {
                   <p className="mx-3 dark:text-black">{t("register:choose")}</p>
                   <DatePicker
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => {
+                      setStartDate(date), handleChange;
+                    }}
                     peekNextMonth
+                    dateFormat="dd.MM.yyyy"
                     showMonthDropdown
                     showYearDropdown
+                    value={formInfo.birthday}
                     name="birthday"
                     dropdownMode="select"
                     className="bg-[#F8FCFC] dark:bg-white active:bg-white customDatePicker border-none w-full  dark:text-black "
@@ -164,6 +218,7 @@ export default function Register() {
                   />
                   <BiChevronRight className="text-[18px] ml-auto text-[#759495] " />
                 </div>
+                <p>{formErrors.birthday}</p>
                 <label htmlFor="passport" className="mt-3">
                   {t("register:passport")}
                 </label>
@@ -171,15 +226,20 @@ export default function Register() {
                   type="text"
                   name="passport"
                   required
+                  value={formInfo.passport}
+                  onChange={handleChange}
                   placeholder="(AA 2314658)"
                   className="outline-none rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8] dark:bg-white dark:text-black"
                 />
+                <p>{formErrors.passport}</p>
                 <label htmlFor="province" className="mt-3">
                   {t("register:cities")}
                 </label>
                 <select
                   name="province"
                   id=""
+                  value={formInfo.province}
+                  onChange={handleChange}
                   className="bg-[#F8FCFC] p-2 outline-none border rounded-[12px] boder-[#D7E6E7] dark:bg-white dark:text-black"
                 >
                   <option value="tosh">{t("register:tashkent")}</option>
@@ -203,39 +263,51 @@ export default function Register() {
                   type="text"
                   placeholder={t("register:job")}
                   name="specialty"
+                  value={formInfo.specialty}
+                  onChange={handleChange}
                   required
                   className="outline-none rounded-[12px] dark:bg-white dark:text-black boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                 />
+                <p>{formErrors.specialty}</p>
                 <label htmlFor="workplace" className="mt-3">
                   {t("register:job_place")}
                 </label>
                 <input
                   type="text"
                   name="workplace"
+                  value={formInfo.workplace}
+                  onChange={handleChange}
                   placeholder={t("register:job_place_input")}
                   required
                   className="outline-none rounded-[12px] dark:bg-white dark:text-black boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                 />
+                <p>{formErrors.workplace}</p>
                 <label htmlFor="position" className="mt-3">
                   {t("register:position")}
                 </label>
                 <input
                   type="text"
                   name="position"
+                  value={formInfo.position}
+                  onChange={handleChange}
                   required
                   className="outline-none dark:bg-white dark:text-black rounded-[12px] boder-[#D7E6E7] border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                 />
+                <p>{formErrors.position}</p>
                 <label htmlFor="phone-num">{t("register:phone")}</label>
                 <div className="  rounded-[12px] boder-[#D7E6E7] dark:text-black border p-2 bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]">
                   +998
                   <input
                     type="number"
                     name="phone"
+                    value={formInfo.phone}
+                    onChange={handleChange}
                     required
                     placeholder="-- --- -- --"
                     className="outline-none dark:bg-white dark:text-black bg-[#F8FCFC] focus:bg-white focus:border-[#C5D7D8]"
                   />
                 </div>
+                <p>{formErrors.phone}</p>
                 <button
                   onClick={formSubmit}
                   className="text-white rounded-[12px] text-[16px] mt-3 py-2 bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
