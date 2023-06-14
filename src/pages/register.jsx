@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
-import DatePicker from "react-datepicker";
+import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
@@ -26,11 +26,22 @@ export default function Register(props) {
   const { registerInfo, setRegisterInfo, setFormInfo, formInfo } =
     useGlobalContext();
 
-  let allData;
   let response;
-
   const formSubmit = (e) => {
     e.preventDefault();
+    if ((e.target.name = "birthday")) {
+      let day = startDate.getDate();
+      if (day < 10) {
+        day = `0${day}`;
+      }
+      let month = startDate.getMonth() + 1;
+      if (month < 10) {
+        month = `0${month}`;
+      }
+      const year = startDate.getFullYear();
+      const time = day + "." + month + "." + year;
+      formInfo.birthday = time;
+    }
     setFormErrors(validate2(formInfo));
     if (formErrors) {
       setShow(true);
@@ -39,6 +50,7 @@ export default function Register(props) {
 
   const EnterAppBtn = async (e) => {
     e.preventDefault();
+    console.log(formInfo);
     setIsSubmit(true);
     setFormErrors(validate1(formInfo));
     response = await fetch("https://vitainline.uz/api/v1/auth/signup/doctor", {
@@ -49,7 +61,7 @@ export default function Register(props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(allData),
+      body: JSON.stringify(formInfo),
     });
 
     const info = await response.json();
@@ -58,19 +70,12 @@ export default function Register(props) {
       window.location.pathname = "account";
     }
   };
-  useEffect(() => {
-    console.log(formErrors);
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log(formInfo);
-    }
-  }, [formErrors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormInfo({ ...formInfo, [name]: value });
-    console.log(formInfo);
   };
-  
+
   const validate1 = (values) => {
     const errors = {};
     if (!values.password) {
@@ -201,7 +206,7 @@ export default function Register(props) {
                 <div className="w-full rounded-[12px] flex relative items-center dark:bg-white  border p-2 bg-[#F8FCFC] active:bg-white focus:border-[#C5D7D8] ">
                   <span className="bg-[url('../images/calendar.png')] mx-2 w-[25px] h-[19px] inline-block"></span>
                   <p className="mx-3 dark:text-black">{t("register:choose")}</p>
-                  <DatePicker
+                  <ReactDatePicker
                     selected={startDate}
                     onChange={(date) => {
                       setStartDate(date), handleChange;
@@ -210,10 +215,9 @@ export default function Register(props) {
                     dateFormat="dd.MM.yyyy"
                     showMonthDropdown
                     showYearDropdown
-                    value={formInfo.birthday}
                     name="birthday"
                     dropdownMode="select"
-                    className="bg-[#F8FCFC] dark:bg-white active:bg-white customDatePicker border-none w-full  dark:text-black "
+                    className="bg-[#F8FCFC] text-black dark:bg-white active:bg-white customDatePicker border-none w-full  dark:text-black "
                     customStyles={{ dateInput: { borderWidth: 0 } }}
                   />
                   <BiChevronRight className="text-[18px] ml-auto text-[#759495] " />

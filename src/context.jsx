@@ -8,7 +8,7 @@ const AppProvider = ({ children }) => {
   const [konModal, setKonModal] = useState(false);
 
   const inialValue = {
-    birthday: new Date(),
+    birthday: "",
     fullname: "",
     passport: "",
     password: "",

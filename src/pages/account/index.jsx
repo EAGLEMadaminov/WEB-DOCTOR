@@ -10,7 +10,8 @@ import { CiGlobe } from "react-icons/ci";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
-import DatePicker from "react-datepicker";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { Formik } from "formik";
 import { useGlobalContext } from "@/context.jsx";
 
@@ -200,7 +201,7 @@ function Account() {
                   <label className="text-[#759495] mb-[10px]" htmlFor="">
                     {t("account:birth_date")}
                   </label>
-                  <DatePicker
+                  <ReactDatePicker
                     dateFormat="dd.MM.yyyy"
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
