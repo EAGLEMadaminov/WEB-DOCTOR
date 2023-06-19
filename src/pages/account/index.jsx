@@ -22,6 +22,7 @@ export async function getStaticProps({ locale }) {
     },
   };
 }
+
 function Account() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -30,11 +31,14 @@ function Account() {
   const [patsientName, setPatsientName] = useState("");
   const [showInfo, setShowInfo] = useState(false);
   const [langValue, setLangValue] = useState("");
-  const { formInfo, setFormInfo, registerInfo } = useGlobalContext();
+  const [patsientInfo, setPatsientInfo] = useState({
+    birthday: "",
+    passport: "",
+  });
+  const { formInfo, setFormInfo, registerInfo, setRegisterInfo } =
+    useGlobalContext();
 
-  console.log(formInfo);
   console.log(registerInfo);
-
   if (url === "/ru/account") {
     setLangValue("ru");
   }
@@ -42,6 +46,7 @@ function Account() {
     router.push("account/patsient");
   };
 
+  console.log(registerInfo);
   const fetchFunck = async () => {
     let token = localStorage.getItem("token");
 
@@ -65,6 +70,7 @@ function Account() {
     }
   };
 
+  console.log(registerInfo);
   fetchFunck();
 
   const handleExit = () => {
@@ -80,11 +86,25 @@ function Account() {
     }
   };
 
-  const handleChangeInput = async () => {
-    const formData = new FormData(document.getElementById("patsient-form"));
-    const data = Object.fromEntries(formData);
-    console.log(data);
-
+  const handleChangeInput = async (e) => {
+    const { name, value } = e.target;
+    if ((e.target.name = "passport")) {
+      patsientInfo.passport = e.target.value;
+    }
+    if ((e.target.name = "birthday")) {
+      let day = startDate.getDate();
+      if (day < 10) {
+        day = `0${day}`;
+      }
+      let month = startDate.getMonth() + 1;
+      if (month < 10) {
+        month = `0${month}`;
+      }
+      const year = startDate.getFullYear();
+      const time = day + "." + month + "." + year;
+      patsientInfo.birthday = time;
+    }
+    setPatsientInfo({ ...patsientInfo, [name]: value });
     const response = await fetch(
       "https://vitainline.uz/api/v1/auth/signin/patient",
       {
@@ -95,7 +115,7 @@ function Account() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(patsientInfo),
       }
     );
 
@@ -149,10 +169,10 @@ function Account() {
             <div className="text-center">
               <div className="w-[130px] mx-auto h-[130px] relative mt-[65px] rounded-[130px] border  place-items-center border-[#D7E6E7]  bg-[url('../images/account/account-person.png')] bg-no-repeat bg-bottom"></div>
               <p className="text-[18px] text-[#759495] text-center">
-                {formInfo.specialty}
+                {formInfo ? formInfo.specialty : ""}
               </p>
               <h2 className="text-[32px] text-[#1B3B3C] text-center">
-                {formInfo.fullname}
+                {formInfo ? formInfo.fullname : ""}
               </h2>
             </div>
 
@@ -167,7 +187,7 @@ function Account() {
               <div className="ml-[18px] text-[#759495]">
                 <p>{t("register:job_place")}</p>
                 <h3 className="text-[20pz] text-[#1B3B3C]">
-                  {formInfo.workplace}
+                  {formInfo ? formInfo.workplace : ""}
                 </h3>
               </div>
             </div>
@@ -180,7 +200,7 @@ function Account() {
               <div className="ml-[18px] text-[#759495]">
                 <p>{t("register:position")}</p>
                 <h3 className="text-[20pz] text-[#1B3B3C]">
-                  {formInfo.position}
+                  {formInfo ? formInfo.position : ""}
                 </h3>
               </div>
             </div>
@@ -204,7 +224,9 @@ function Account() {
                   <ReactDatePicker
                     dateFormat="dd.MM.yyyy"
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => {
+                      setStartDate(date), handleChangeInput;
+                    }}
                     className="lg:w-[305px]  w-[220px] border outline-none bg-[#F8FCFC] p-2 dark:bg-white text-[#759495] border-[#D7E6E7] rounded-[12px]"
                   />
                 </div>

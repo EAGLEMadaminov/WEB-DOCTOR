@@ -1,6 +1,7 @@
 {
+  "add_advice": "Tavsiyanoma qo’shish",
   "add_again": "Yana qo’shish",
-  "add_info_input": "Vosita haqida qo’shimcha ma’lumotni kiriting",
+  "add_info_input": "Qo’shimcha ma’lumotni kiriting",
   "additional_info": "Qo’shimcha ma’lumot",
   "add_tool": "Vosita qo’shish",
   "after_eat": "Ovqatdan keyin",
@@ -12,6 +13,8 @@
   "first_drug": "Parasetomol 500 mg",
   "first_num": "mahal",
   "how_much": "Necha mahal ichiladi",
+  "name": "Nomi",
+  "new_advice": "Yangi konsultatsiya",
   "num_check": "Necha mahal tekshiriladi?",
   "num_come": "Kelish tartibi",
   "num_eat": "Nechtadan ichiladi?",

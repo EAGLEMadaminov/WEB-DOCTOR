@@ -11,6 +11,9 @@
   input::-webkit-calendar-picker-indicator {
     display: none !important;
   }
+  /* input[type="time"]::-webkit-datetime-edit-ampm-field {
+    display: none;
+  } */
 }
 @layer components {
   .davolash-line::after,

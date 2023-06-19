@@ -47,9 +47,9 @@ function Rengen() {
   const ChangeLangBtn = (e) => {
     let lang = e.target.value;
     if (lang === "ru") {
-      router.push("/ru/account/patsient/tavsiyanoma/rengen");
+      router.push("/ru/account/patsient/tavsiyanoma/add");
     } else {
-      window.location.pathname = "/account/patsient/tavsiyanoma/rengen";
+      window.location.pathname = "/account/patsient/tavsiyanoma/add";
     }
   };
 
@@ -98,7 +98,7 @@ function Rengen() {
                 <BsArrowLeft className="mx-3" /> {t("account:go_back_btn")}
               </button>
               <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
-                {t("account:check_heart")}
+                {t("add:add_advice")}
               </h3>
             </div>
             <div className="mr-10 flex items-center">
@@ -112,26 +112,29 @@ function Rengen() {
             </div>
           </div>
 
-          <div className="mx-6 mt-10 rounded-[18px] border border-[#D7E6E7] relative">
+          <div className="mx-6 mt-10 rounded-[18px]   border border-[#D7E6E7] relative">
             <div className="flex">
-              <div className="text-[14px] text-[#759495] pl-5 font-[400] border rounded-tl-[18px] border-[#D7E6E7] w-[300px] flex items-center p-2">
+              <div className="text-[14px] text-[#759495] pl-5 font-[400] border rounded-tl-[18px] border-[#D7E6E7] w-[270px] flex items-center p-2">
                 {t("add:num_check")}
                 <button
-                  className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px] ml-14 flex items-center justify-center"
+                  className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px]  ml-auto flex items-center justify-center"
                   onClick={AddClock}
                 >
                   <GoPlus className=" text-white " />
                 </button>
               </div>
-              <div className="text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[350px] flex items-center p-2">
-                <p className="ml-4">{t("add:save")} </p>
+              <div className="text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[180px] flex items-center p-2">
+                <p className="ml-4">{t("add:time")} </p>
               </div>
-              <div className="text-[14px] text-[#759495] font-[400] border w-[350px] rounded-tr-[18px] border-[#D7E6E7]  flex items-center p-2">
+              <div className="text-[14px] text-[#759495] w-[250px] font-[400] border border-[#D7E6E7]  flex items-center p-2">
+                <p className="ml-4">{t("add:name")} </p>
+              </div>
+              <div className="text-[14px] text-[#759495] font-[400] border w-[300px] rounded-tr-[18px] border-[#D7E6E7]  flex items-center p-2">
                 <p className="ml-4 "> {t("add:additional_info")} </p>
               </div>
             </div>
             <div className="flex bg-[#F8FCFC] rounded-b-[18px] min-h-[300px]">
-              <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[300px] pl-5 p-2">
+              <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[270px] pl-5 p-2">
                 {numberEatDrug.map((item, index) => {
                   return (
                     <div className="my-3" key={item}>
@@ -139,12 +142,12 @@ function Rengen() {
                         <p className="mr-1">
                           {index + 1}-{t("add:first_num")}{" "}
                         </p>
-                        <div className="border border-[#D7E6E7] rounded-[12px] w-[77px] h-[34px] flex  justify-around items-center">
-                          <BsClock className="text-[#1BB7B5]" />
+                        <div className="border bg-white border-[#D7E6E7] rounded-[12px] w-[100px] h-[40px] flex items-center">
+                          <BsClock className="text-[#1BB7B5] ml-3" />
                           <input
                             type="text"
                             placeholder="00:00"
-                            className="w-9 h-3 dark:bg-white dark:text-black outline-none placeholder:text-[#C5D7D8]"
+                            className="w-9 h-4 ml-2 dark:bg-white dark:text-black outline-none placeholder:text-[#C5D7D8]"
                           />
                         </div>
                         <button
@@ -158,18 +161,25 @@ function Rengen() {
                   );
                 })}
               </div>
-              <div className="border w-[350px]  border-[#D7E6E7] ">
+              <div className="border w-[182px]  border-[#D7E6E7] ">
                 <input
                   type="text"
                   placeholder={t("add:days")}
-                  className="border dark:bg-white dark:text-black border-[#D7E6E7] w-[300px] ml-4 h-11 rounded-xl px-2 mt-4"
+                  className="border placeholder:text-[#C5D7D8] w-[120px] dark:bg-white dark:text-black border-[#D7E6E7]  mx-4 h-11 rounded-xl px-2 mt-4"
                 />
               </div>
-              <div className="border border-[#D7E6E7] w-[350px] rounded-br-[18px]">
+              <div className="border  border-[#D7E6E7] w-[250px] ">
+                <input
+                  type="text"
+                  placeholder={t("add:days")}
+                  className="border placeholder:text-[#C5D7D8] dark:bg-white dark:text-black border-[#D7E6E7] mx-4 h-11 rounded-xl px-2 mt-4"
+                />
+              </div>
+              <div className="border border-[#D7E6E7] w-[302px] rounded-br-[18px]">
                 <textarea
                   name="addition-info"
                   rows={3}
-                  className="border dark:bg-white dark:text-black w-[300px] ml-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
+                  className="border placeholder:text-[#C5D7D8] w-[260px] dark:bg-white dark:text-black  mx-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
                   placeholder={t("add:add_info_input")}
                 ></textarea>
               </div>

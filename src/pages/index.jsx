@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 import { useRouter } from "next/router";
 import { FiChevronDown } from "react-icons/fi";
 import { CiGlobe } from "react-icons/ci";
@@ -7,8 +7,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { UseTranslation, useTranslation } from "next-i18next";
 import getFormValues from "@/components/getFormValues";
 import { useGlobalContext } from "@/context.jsx";
-import { Formik } from "formik";
-
+import { useForm } from "react-hook-form";
 export async function getStaticProps({ locale }) {
   return {
     props: {
@@ -23,19 +22,15 @@ export default function Home(props) {
   const [inputType, setInputType] = useState("password");
   const [resInfo, setResInfo] = useState("");
   const { formInfo, setFormInfo } = useGlobalContext();
+  const { register, handleSubmit } = useForm();
 
   const handleEnterList = (e) => {
     e.preventDefault();
     window.location.pathname = "/register";
   };
   let info;
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(
-      document.getElementById("my-awesome-dropzone")
-    );
-    const data = Object.fromEntries(formData);
-
+  const onSubmit = async (data) => {
+    console.log(data);
     const response = await fetch(
       "https://vitainline.uz/api/v1/auth/signin/doctor",
       {
@@ -63,11 +58,10 @@ export default function Home(props) {
         setResInfo("Login yoki parol xato kiritilgan. Qayta urinib ko'ring!");
       }
     }
-
-    setTimeout(() => {
-      setResInfo("");
-    }, 5000);
   };
+  setTimeout(() => {
+    setResInfo("");
+  }, 5000);
 
   const ChangeLangBtn = (e) => {
     let lang = e.target.value;
@@ -116,7 +110,7 @@ export default function Home(props) {
             className="w-full flex flex-col "
             autoComplete="off"
             id="my-awesome-dropzone"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             method="POST"
           >
             <label htmlFor="login" className="mt-[10px] mb-2 text-[#759495]">
@@ -126,7 +120,7 @@ export default function Home(props) {
               name="passport"
               className="border border-[#D7E6E7] rounded-[12px] p-2 dark:bg-white dark:text-black"
               type="text"
-              required
+              {...register("passport", { required: true })}
               placeholder={t("home:input_login")}
               autoComplete="off"
             />
@@ -140,9 +134,8 @@ export default function Home(props) {
               <input
                 name="password"
                 className=" w-full p-2 rounded-[12px] dark:bg-white dark:text-black"
-                type={inputType}
                 placeholder="*******"
-                required
+                {...register("password", { required: true })}
                 autoComplete="off"
               />
               <span

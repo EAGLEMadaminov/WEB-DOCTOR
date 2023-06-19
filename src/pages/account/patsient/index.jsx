@@ -28,6 +28,7 @@ function Patsient() {
   const { t } = useTranslation();
   const { registerInfo } = useGlobalContext();
   const router = useRouter();
+
   const fetchFunck = async () => {
     let token = localStorage.getItem("ptoken");
     const singResponse = await fetch("https://vitainline.uz/api/v1/auth/user", {

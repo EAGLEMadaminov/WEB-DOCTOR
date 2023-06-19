@@ -7,14 +7,15 @@ import { CiGlobe } from "react-icons/ci";
 import { useRouter } from "next/router";
 import { BsArrowLeft } from "react-icons/bs";
 import { BsCheck2 } from "react-icons/bs";
-import { BsClock } from "react-icons/bs";
-import ReactDatePicker from "react-datepicker";
+import DatePicker from "react-datepicker";
 import { BiChevronDown } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useGlobalContext } from "@/context";
 import KonsultatsiyaModal from "@/components/Konsultatsiya/modal";
+import LiveSearch from "@/components/Davolash/LiveSearch";
+import { useForm } from "react-hook-form";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -32,6 +33,7 @@ function Add() {
   const [showDrugList, setShowDrgList] = useState(false);
   const [btnBorder, setBtnBorder] = useState("8px");
   const [hideBtnBorder, setHideBtnBorder] = useState("1px");
+  const { register, handleSubmit } = useForm();
 
   const handleExit = () => {
     router.pathname = "";
@@ -48,7 +50,9 @@ function Add() {
       setHideBtnBorder("0px");
     }
   };
-
+  const onSubmit = (data) => {
+    console.log(data);
+  };
   const GoToBackBtn = () => {
     router.push("/account/patsient/konsultatsiya");
   };
@@ -93,7 +97,7 @@ function Add() {
           </div>
         </div>
         {/* body  */}
-        <form action="" method="post" onClick={(e) => e.preventDefault()}>
+        <form action="" method="post" onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
             <div className="flex justify-between mt-7 mb-3">
               <div className="flex items-center">
@@ -104,7 +108,7 @@ function Add() {
                   <BsArrowLeft className="mx-3" /> {t("account:go_back_btn")}
                 </button>
                 <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
-                  {t("account:check_blood")}
+                  {t("add:new_advice")}
                 </h3>
               </div>
               <div className="mr-10 flex items-center">
@@ -118,76 +122,74 @@ function Add() {
                 </button>
               </div>
             </div>
-            {konModal ? <KonsultatsiyaModal /> : ""}
+            {konModal ? (
+              <div className=" z-[3] absolute top-0 left-0 right-0 bottom-0 bg-[#809291]">
+                <div className="relative bg-white w-full  md:w-[400px] lg:w-[500px] p-3 lg:p-10 mx-auto mt-[100px] rounded-[18px]">
+                  <span className="bg-[url('../images/konsultatsiya/books.png')] bg-no-repeat bg-center mx-auto block w-[100px] h-[100px] rounded-[100px] bg-[#F6FDFE]"></span>
+                  <h1 className="text-[32px] font-[500] text-black text-center">
+                    Haqiqatan ham ushbu soʻrovni yubormoqchimisiz?
+                  </h1>
+                  <div className="flex flex-wrap justify-between mt-6">
+                    <button
+                      className="w-[180px] rounded-[12px] bg-[#F5FEFE] font-[500] text-[#1B3B3C] h-12"
+                      onClick={() => setKonModal(false)}
+                    >
+                      Yo’q
+                    </button>
+                    <button
+                      className="w-[180px] rounded-[12px] font-[500] text-white bg-[#1BB7B5]"
+                      onClick={() => setKonModal(false)}
+                    >
+                      Xa
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
 
             <div className="mx-6 mt-10 rounded-[18px] border border-[#D7E6E7] relative">
               <div className="flex">
-                <div className="text-[14px] text-[#759495] pl-5 font-[400] border rounded-tl-[18px] border-[#D7E6E7] w-[300px] flex items-center p-2">
-                  {t("add:check_rengen")}
+                <div className="text-[14px] text-[#759495] pl-5 font-[400] border rounded-tl-[18px] border-[#D7E6E7] w-[285px] flex items-center p-2">
+                  Doctor turi
                 </div>
-
-                <div className="text-[14px] text-[#759495] font-[400] border w-[400px]  border-[#D7E6E7]  flex items-center p-2">
+                <div className="text-[14px] text-[#759495] pl-5 font-[400] border  border-[#D7E6E7] w-[285px] flex items-center p-2">
+                  Doctorni tanlang
+                </div>
+                <div className="text-[14px] text-[#759495] font-[400] border w-[355px]  border-[#D7E6E7]  flex items-center p-2">
                   <p className="ml-4 "> {t("add:when")} </p>
                 </div>
-                <div className="text-[14px] text-[#759495] font-[400] border w-[350px] rounded-tr-[18px] border-[#D7E6E7]  flex items-center p-2">
+                <div className="text-[14px] text-[#759495] font-[400] border w-[380px] rounded-tr-[18px] border-[#D7E6E7]  flex items-center p-2">
                   <p className="ml-4 "> {t("add:additional_info")} </p>
                 </div>
               </div>
               <div className="flex bg-[#F8FCFC] rounded-b-[18px] min-h-[300px]">
                 <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[300px] pl-5 p-2">
-                  <button
-                    className={`flex items-center ml-[2px] w-[100%] border border-[#D7E6E7] rounded-b-[${btnBorder}]  border-b-[${hideBtnBorder}] px-2  py-1 rounded-[8px] `}
-                    onClick={handleShowDregBtn}
-                    type="button"
-                  >
-                    <BiChevronDown className="mr-2 text-[18px]" />
-                    {t("add:choose")}
-                  </button>
-                  {showDrugList ? (
-                    <div>
-                      <ul
-                        className="border border-t-0 rounded-b-[8px] mx-1 px-1  mr-[1px]"
-                        onClick={(e) => console.log(e.target.textContent)}
-                      >
-                        <li
-                          className="parasetamol flex py-2"
-                          value={"parasetomol"}
-                        >
-                          {t("add:analiz")}
-                        </li>
-                        <li className="aspirin flex py-2">
-                          {t("add:rengen")}{" "}
-                        </li>
-                      </ul>
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                  <LiveSearch />{" "}
+                </div>
+                <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[300px] pl-5 p-2">
+                  <LiveSearch />{" "}
                 </div>
 
-                <div className="border w-[400px] flex items-start justify-center border-[#D7E6E7] ">
+                <div className="border w-[380px] flex items-start justify-center border-[#D7E6E7] ">
                   <div className="flex border border-[#D7E6E7] bg-white mx-2 mt-4 rounded-[12px] p-2">
                     <span className="bg-[url('../images/calendar.png')] bg-no-repeat mx-2 w-[25px] h-[19px] inline-block"></span>
-                    <ReactDatePicker
+                    <DatePicker
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
-                      className="w-[80px] bg-transparent dark:text-[#1B3B3C] outline-none"
-                    />
-                  </div>
-                  <div className="border border-[#D7E6E7] bg-white rounded-[12px] mx-2 mt-[14px] pb-[14px] w-[150px]  p-[10px] flex   items-center">
-                    <BsClock className="text-[#1BB7B5]  mx-4" />
-                    <input
-                      type="text"
-                      placeholder="00:00"
-                      className="w-14 h-3 dark:text-[#1B3B3C] dark:bg-white outline-none placeholder:text-[#C5D7D8]"
+                      dateFormat="dd.MM.yyyy"
+                      className="outline-none"
+                      {...register("time")}
                     />
                   </div>
                 </div>
-                <div className="border border-[#D7E6E7] w-[350px] rounded-br-[18px]">
+                <div className="border border-[#D7E6E7] w-[400px] rounded-br-[18px]">
                   <textarea
                     name="addition-info"
                     rows={3}
-                    className=" dark:bg-white dark:text-[#1B3B3C] border w-[300px] ml-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
+                    {...register("description")}
+                    className="placeholder:text-[#C5D7D8] dark:bg-white dark:text-[#1B3B3C] border w-[250px] mx-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
                     placeholder={t("add:add_info_input")}
                   ></textarea>
                 </div>

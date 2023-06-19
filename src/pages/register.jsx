@@ -5,7 +5,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useGlobalContext } from "@/context.jsx";
-import { Formik } from "formik";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -14,7 +13,6 @@ export async function getStaticProps({ locale }) {
     },
   };
 }
-
 export default function Register(props) {
   const { t } = useTranslation();
   const [startDate, setStartDate] = useState();
@@ -49,9 +47,13 @@ export default function Register(props) {
   };
 
   const EnterAppBtn = async (e) => {
-    e.preventDefault();
+    setIsSubmit(false);
+    if (((e.target.name === "password") === e.target.name) === "password2") {
+      console.log("second password wrong");
+    }
+    delete formInfo["password2"];
     console.log(formInfo);
-    setIsSubmit(true);
+    e.preventDefault();
     setFormErrors(validate1(formInfo));
     response = await fetch("https://vitainline.uz/api/v1/auth/signup/doctor", {
       method: "POST",
@@ -66,13 +68,23 @@ export default function Register(props) {
 
     const info = await response.json();
     if (response.status == 201) {
-      localStorage.setItem("id", info.data.id);
+      localStorage.setItem("info", JSON.stringify(formInfo));
       window.location.pathname = "account";
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (value === "") {
+      if (window.location.pathname == "ru") {
+        setRegisterInfo("Пожалуйста, заполните все поля.");
+      } else {
+        setRegisterInfo("Iltimos barcha maydonni to'ldiring.");
+      }
+      setIsSubmit(true);
+    } else {
+      setIsSubmit(false);
+    }
     setFormInfo({ ...formInfo, [name]: value });
   };
 
@@ -156,7 +168,7 @@ export default function Register(props) {
               </label>
               <div className="mt-2 border relative border-[#D7E6E7] rounded-[12px]">
                 <input
-                  name="password"
+                  name="password2"
                   className=" w-full p-2 rounded-[12px] dark:bg-white dark:text-black"
                   type={secondInput}
                   placeholder="************"
@@ -313,8 +325,9 @@ export default function Register(props) {
                 </div>
                 <p>{formErrors.phone}</p>
                 <button
+                  disabled={isSubmit}
                   onClick={formSubmit}
-                  className="text-white rounded-[12px] text-[16px] mt-3 py-2 bg-gradient-to-t from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
+                  className="text-white rounded-[12px] text-[16px] mt-3 py-2 bg-gradient-to-t  from-[#1BB7B5] to-[#0EC5C9] font-[500] hover:bg-gradient-to-t hover:from-[#0F9694] hover:to-[#0A7476]"
                 >
                   {t("register:bottom_btn")}
                 </button>

@@ -6,6 +6,8 @@ const Appcontext = React.createContext();
 const AppProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [konModal, setKonModal] = useState(false);
+  const [registerInfo, setRegisterInfo] = useState("");
+  const [choosenPill, setChoosenPill] = useState("");
 
   const inialValue = {
     birthday: "",
@@ -19,7 +21,6 @@ const AppProvider = ({ children }) => {
     workplace: "",
   };
   const [formInfo, setFormInfo] = useState(inialValue);
-  const [registerInfo, setRegisterInfo] = useState("");
 
   return (
     <Appcontext.Provider
@@ -32,6 +33,8 @@ const AppProvider = ({ children }) => {
         setFormInfo,
         registerInfo,
         setRegisterInfo,
+        choosenPill,
+        setChoosenPill,
       }}
     >
       {children}

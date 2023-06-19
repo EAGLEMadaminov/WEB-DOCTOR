@@ -36,21 +36,9 @@ function Tavsiyanoma() {
   const handleExit = () => {
     window.location.pathname = "";
   };
-  const GoToDavleniyaBtn = () => {
-    router.push("/account/patsient/tavsiyanoma/davleniya");
-  };
+
   const addNewBtn = () => {
-    if (showForm) {
-      setShowForm(false);
-    } else {
-      setShowForm(true);
-    }
-  };
-  const GoToAnalizBtn = () => {
-    router.push("/account/patsient/tavsiyanoma/analiz");
-  };
-  const GoToRentGentBtn = () => {
-    router.push("/account/patsient/tavsiyanoma/rengen");
+    window.location.pathname = "/account/patsient/tavsiyanoma/add";
   };
 
   const ChangeLangBtn = (e) => {
@@ -125,44 +113,6 @@ function Tavsiyanoma() {
                 {t("account:add_new")}
               </button>
             </div>
-            {showForm ? (
-              <div className="absolute w-[334px] h-[224px] z-[2] right-[70px] mt-14 rounded-xl bg-white border border-[#D7E6E7] ">
-                <div className="bg-white border shadow-[0px_6px_16px] shadow-[#EFF4F4] border-[#E9F6F6] w-[304px] h-[200px] mt-2 rounded-[18px] mx-auto flex flex-col">
-                  <button
-                    className="bg-white border shadow-[0px_6px_16px] items-center flex shadow-[#EFF4F4] border-[#E9F6F6] rounded-[18px] mx-auto mt-3 p-2 w-[270px]"
-                    onClick={GoToDavleniyaBtn}
-                  >
-                    <span className="bg-[url('../images/tavsiyanoma/davleniya.png')] bg-center  rounded-[32px] bg-[#EAF9FB] inline-block bg-no-repeat w-8 h-8"></span>
-                    <p className="text-[#1B3B3C]  ml-2 font-[500] flex">
-                      {t("account:check_dav")}
-                    </p>
-                    <BiChevronRight className="ml-auto text-[#759495]" />
-                  </button>
-                  <button
-                    className="bg-white border shadow-[0px_6px_16px] items-center flex shadow-[#EFF4F4] border-[#E9F6F6] rounded-[18px] mx-auto mt-3 p-2 w-[270px]"
-                    onClick={GoToRentGentBtn}
-                  >
-                    <span className="bg-[url('../images/tavsiyanoma/yurak.png')] bg-center  rounded-[32px] bg-[#EAF9FB] inline-block bg-no-repeat w-8 h-8"></span>
-                    <p className="text-[#1B3B3C]  ml-2 font-[500] flex">
-                      {t("account:check_heart")}
-                    </p>
-                    <BiChevronRight className="ml-auto text-[#759495]" />
-                  </button>
-                  <button
-                    className="bg-white border shadow-[0px_6px_16px]  items-center flex shadow-[#EFF4F4] border-[#E9F6F6] rounded-[18px] mx-auto mt-3 p-2 w-[270px]"
-                    onClick={GoToAnalizBtn}
-                  >
-                    <span className="bg-[url('../images/tavsiyanoma/analiz.png')] bg-center  rounded-[32px] bg-[#EAF9FB] bg-no-repeat w-8 h-8"></span>
-                    <p className="text-[#1B3B3C]  ml-2 font-[500] flex">
-                      {t("account:check_blood")}
-                    </p>
-                    <BiChevronRight className="ml-auto text-[#759495]" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              ""
-            )}
           </div>
           <div className=" text-center  mx-10">
             <h2 className="davolash-line w-[875px] mx-10 dark:text-[#1B3B3C]">
