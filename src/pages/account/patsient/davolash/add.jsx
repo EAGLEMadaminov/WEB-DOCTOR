@@ -12,7 +12,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsClock } from "react-icons/bs";
 import { IoIosClose } from "react-icons/io";
-import { Formik, Form, FieldArray } from "formik";
+import { Formik, Form, FieldArray, Field, useFormik } from "formik";
 import { RxCross2 } from "react-icons/rx";
 import { GrSubtract } from "react-icons/gr";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -21,7 +21,6 @@ import { resolve } from "styled-jsx/css";
 import LiveSearch from "@/components/Davolash/LiveSearch";
 import { useGlobalContext } from "@/context";
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
 export async function getStaticProps({ locale }) {
   return {
     props: {
@@ -36,28 +35,18 @@ function Add() {
   const [drugsNum, setDrugsNum] = useState(4);
   const [numberEatDrug, setNumberEatDrug] = useState([1]);
   const { choosenPill } = useGlobalContext();
-  const { register, handleSubmit, control } = useForm({
-    defaultValues: {
-      pill: "",
-      times: [],
-      quantity: "",
-      type: "",
-      period: "",
-      extraInformation: "",
-    },
-  });
-  const { fields } = useFieldArray({
-    control,
-    name: "times",
-  });
-  const handleExit = () => {
-    router.pathname = "";
+  const initialValues = {
+    pill: "",
+    times: [""],
+    quantity: "",
+    type: "",
+    period: "",
+    extraInformation: "",
+    groups: [""],
   };
-  let newArray = [];
-
-  const onSubmit = async (e, data) => {
-    console.log(data);
+  const onSubmit = async (values) => {
     let token = localStorage.getItem("token");
+    console.log(values);
     const response = await fetch("https://vitainline.uz/api/v1/healings", {
       method: "POST",
       mode: "cors",
@@ -67,14 +56,15 @@ function Add() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(values),
     });
-    // console.log(response.status);
   };
-
-  const AddClock = () => {
-    let id = new Date().getTime();
-    numberEatDrug.push(id);
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+  });
+  const handleExit = () => {
+    router.pathname = "";
   };
 
   const GoToBackBtn = () => {
@@ -148,125 +138,116 @@ function Add() {
 
         {/* body  */}
 
-        <Formik initialValues={{ drugs: ["paresatomol"] }}>
-          {({ values }) => (
-            <Form
-              action=""
-              method="post"
-              id="healing-add"
-              noValidate
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <FieldArray
-                name="drugs"
-                render={(arrayHelpers) => (
-                  <div>
-                    <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
-                      <div className="flex justify-between mt-7 mb-3">
-                        <div className="flex items-center">
-                          <button
-                            className="flex dark:text-[#1B3B3C] items-center ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
-                            onClick={GoToBackBtn}
-                          >
-                            <BsArrowLeft className="mx-3" />{" "}
-                            {t("account:go_back_btn")}
-                          </button>
-                          <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
-                            {t("add:add_tool")}
-                          </h3>
-                        </div>
-                        <div className="mr-10 flex items-center">
-                          <button
-                            onClick={onSubmit}
-                            type="submit"
-                            className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
-                          >
-                            <BsCheck2 className="mr-3" />
-                            {t("add:save")}
-                          </button>
-                        </div>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
+          <Form>
+            <FieldArray name="times">
+              {(props) => {
+                const { push, remove, form } = props;
+                const { values } = form;
+                const { groups } = values;
+                return (
+                  <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
+                    <div className="flex justify-between mt-7 mb-3">
+                      <div className="flex items-center">
+                        <button
+                          className="flex dark:text-[#1B3B3C] items-center ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
+                          onClick={GoToBackBtn}
+                        >
+                          <BsArrowLeft className="mx-3" />{" "}
+                          {t("account:go_back_btn")}
+                        </button>
+                        <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
+                          {t("add:add_tool")}
+                        </h3>
                       </div>
-                      {values.drugs && values.drugs.length > 0
-                        ? values.drugs.map((drug, index) => (
-                            <div
-                              className="mx-6 mt-10 rounded-[18px] border  border-[#D7E6E7] relative"
-                              key={index}
-                            >
-                              <div className="text-left flex ">
+                      <div className="mr-10 flex items-center">
+                        <button
+                          type="submit"
+                          className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
+                        >
+                          <BsCheck2 className="mr-3" />
+                          {t("add:save")}
+                        </button>
+                      </div>
+                    </div>
+                    {groups.map((group, index) => {
+                      return (
+                        <div key={index}>
+                          <div
+                            className="mx-6 mt-10 rounded-[18px] border  border-[#D7E6E7] relative"
+                            key={index}
+                          >
+                            <div className="text-left flex ">
+                              <div className="flex flex-col">
                                 <div className="text-[14px] pl-5 text-[#759495] rounded-tl-[18px]  font-[400] w-[200px] border border-[#D7E6E7] p-2 ">
                                   {t("add:tool")}
                                 </div>
-                                <div
-                                  className="text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[200px] flex items-center p-2"
-                                  type="button"
-                                >
-                                  {t("add:how_much")}
-                                  <button
-                                    className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px] ml-3 flex items-center justify-center"
-                                    onClick={AddClock}
-                                  >
-                                    <GoPlus className=" text-white " />
-                                  </button>
-                                </div>
-                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
-                                  {t("add:num_eat")}
-                                </div>
-                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
-                                  {t("add:schedule_eat")}
-                                </div>
-                                <div className="text-[14px] text-[#759495] font-[400] w-[120px] p-2 border border-[#D7E6E7]">
-                                  <p className="w-[90px]">{t("add:time")}</p>
-                                </div>
-                                <div className="text-[14px] text-[#759495] font-[400] w-[200px] rounded-tr-[18px] p-2 border border-[#D7E6E7]">
-                                  {t("add:additional_info")}
-                                </div>
-                              </div>
-                              <button
-                                type="button"
-                                className="absolute pl-1  ml-auto w-6 h-6 top-[-7px] right-[-7px] bg-white text-[#759495] rounded-[40px] border border-[#D7E6E7]  "
-                                onClick={() => arrayHelpers.remove(index)}
-                              >
-                                <RxCross2 />
-                              </button>
-                              <div className="text-left flex min-h-[250px]">
                                 <div className="text-[14px] text-[#759495] rounded-bl-[18px]  font-[400] w-[200px] border border-[#D7E6E7] p-2 ">
                                   <LiveSearch />
                                 </div>
+                              </div>
 
-                                <div className="flex flex-col text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[200px]   items-center p-2">
-                                  {numberEatDrug.map((item, index) => {
+                              <div className="flex flex-col">
+                                <FieldArray>
+                                  {(arrayProps) => {
+                                    const { times } = values;
                                     return (
-                                      <div className="my-3" key={item}>
-                                        <div className="flex items-center">
-                                          <p className="mr-1">
-                                            {index + 1}-{t("add:first_num")}
-                                          </p>
-                                          <div className="border border-[#D7E6E7] rounded-[12px] w-[77px] h-[34px] flex  justify-around items-center">
-                                            <BsClock className="text-[#1BB7B5]" />
-                                            {fields.map((field, index) => {
-                                              <input
-                                                name="times"
-                                                type="time"
-                                                key={field.id}
-                                                {...register(
-                                                  `times.${index}.value`
-                                                )}
-                                                className="w-9 h-3  outline-none dark:bg-white dark:text-black placeholder:text-[#C5D7D8]"
-                                              />;
-                                            })}
-                                          </div>
+                                      <div>
+                                        <div
+                                          className="text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[200px] flex items-center p-2"
+                                          type="button"
+                                        >
+                                          {t("add:how_much")}
                                           <button
-                                            type="button"
-                                            onClick={() => removeElement(index)}
+                                            className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px] ml-3 flex items-center justify-center"
+                                            onClick={() => arrayProps.push("")}
                                           >
-                                            <IoIosClose className="text-[20px] ml-1" />
+                                            <GoPlus className=" text-white " />
                                           </button>
+                                        </div>
+
+                                        <div className="flex flex-col text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[200px]   items-center p-2">
+                                          {arrayProps.form.values.times.map(
+                                            (time, i) => {
+                                              return (
+                                                <div className="my-3" key={i}>
+                                                  <div className="flex items-center">
+                                                    <p className="mr-1">
+                                                      {index + 1}-
+                                                      {t("add:first_num")}
+                                                    </p>
+                                                    <div className="border border-[#D7E6E7] rounded-[12px] w-[77px] h-[34px] flex  justify-around items-center">
+                                                      <BsClock className="text-[#1BB7B5]" />
+                                                      <Field
+                                                        type="time"
+                                                        format="HH:mm"
+                                                        name={`times[${i}]`}
+                                                        className="w-9 h-3  outline-none dark:bg-white dark:text-black placeholder:text-[#C5D7D8]"
+                                                      />
+                                                    </div>
+                                                    <button
+                                                      type="button"
+                                                      onClick={() =>
+                                                        arrayProps.remove(i)
+                                                      }
+                                                    >
+                                                      <IoIosClose className="text-[20px] ml-1" />
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                              );
+                                            }
+                                          )}
                                         </div>
                                       </div>
                                     );
-                                  })}
+                                  }}
+                                </FieldArray>
+                              </div>
+                              <div className="flex flex-col">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
+                                  {t("add:num_eat")}
                                 </div>
-
                                 <div className="text-[14px] text-[#759495]  font-[400] w-[150px] p-2 border border-[#D7E6E7] flex">
                                   <button
                                     className="bg-white border ml-3  border-[#E9F6F6] rounded-[8px] w-8 h-8"
@@ -274,10 +255,7 @@ function Add() {
                                   >
                                     <GrSubtract className="mx-auto" />
                                   </button>
-                                  <p
-                                    {...register("quantity")}
-                                    className="mx-2 text-[#1B3B3C] mt-1"
-                                  >
+                                  <p className="mx-2 text-[#1B3B3C] mt-1">
                                     {drugsNum}
                                   </p>
                                   <button
@@ -287,14 +265,19 @@ function Add() {
                                     +
                                   </button>
                                 </div>
+                              </div>
+                              <div className="flex flex-col">
                                 <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
-                                  <fieldset>
+                                  {t("add:schedule_eat")}
+                                </div>
+                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
+                                  <Field as="fieldset" name="type">
                                     <div className="border border-[#D7E6E7] p-1 rounded-xl">
                                       <input
                                         type="radio"
                                         id="radio1"
                                         name="type"
-                                        {...register("Ovqaydan oldin")}
+                                        value="Ovqatdan oldin"
                                         className=" dark:border-[#D7E6E7] brightness-150 active:brightness-150  hover:brightness-150 "
                                       />
                                       <label
@@ -308,7 +291,7 @@ function Add() {
                                       <input
                                         type="radio"
                                         id="radio2"
-                                        {...register("Ovqatdan keyin")}
+                                        value="Ovqatdan keyin"
                                         name="type"
                                         className=" brightness-150  p-2 after:w-2 after:h-2 active:brightness-150  hover:brightness-150"
                                       />
@@ -319,43 +302,60 @@ function Add() {
                                         {t("add:after_eat")}
                                       </label>
                                     </div>
-                                  </fieldset>
+                                  </Field>
+                                </div>
+                              </div>
+                              <div className="flex flex-col">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[120px] p-2 border border-[#D7E6E7]">
+                                  <p className="w-[90px]">{t("add:time")}</p>
                                 </div>
                                 <div className="text-[14px] text-[#759495] font-[400] w-[120px] p-2 border border-[#D7E6E7]">
-                                  <input
+                                  <Field
                                     type="text"
                                     placeholder={t("add:days")}
                                     name="period"
-                                    {...register("period")}
                                     className="outline-none dark:bg-white dark:text-black p-2 border border-[#D7E6E7] rounded-xl w-[100%]"
                                   />
                                 </div>
+                              </div>
+                              <div className="flex flex-col">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[200px] rounded-tr-[18px] p-2 border border-[#D7E6E7]">
+                                  {t("add:additional_info")}
+                                </div>
                                 <div className="text-[14px] text-[#759495] font-[400]  p-2 w-[200px] rounded-br-[18px]  border border-[#D7E6E7]">
-                                  <textarea
+                                  <Field
+                                    as="textarea"
                                     name="extraInformation"
                                     rows={4}
-                                    {...register("extraInformation")}
                                     className="border w-[170px] dark:bg-white dark:text-black rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
                                     placeholder={t("add:add_info_input")}
-                                  ></textarea>
+                                  ></Field>
                                 </div>
                               </div>
                             </div>
-                          ))
-                        : ""}
-                      <button
-                        type="button"
-                        className="bg-[#1BB7B5] text-white rounded-[12px] w-[170px] ml-5 mb-8 mt-2 p-2"
-                        onClick={() => arrayHelpers.push("")}
-                      >
-                        + {t("add:add_again")}
-                      </button>
-                    </div>
+                            <button
+                              type="button"
+                              className="absolute pl-1  ml-auto w-6 h-6 top-[-7px] right-[-7px] bg-white text-[#759495] rounded-[40px] border border-[#D7E6E7]  "
+                              onClick={() => remove(index)}
+                            >
+                              <RxCross2 />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      className="bg-[#1BB7B5] text-white rounded-[12px] w-[170px] ml-5 mb-8 mt-2 p-2"
+                      onClick={() => push("")}
+                    >
+                      + {t("add:add_again")}
+                    </button>
                   </div>
-                )}
-              />
-            </Form>
-          )}
+                );
+              }}
+            </FieldArray>
+          </Form>
         </Formik>
       </div>
     </div>

@@ -12,6 +12,7 @@ import { BsClock } from "react-icons/bs";
 import { IoIosClose } from "react-icons/io";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { FieldArray, useFormik, Formik, Form, Field } from "formik";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -25,6 +26,35 @@ function Rengen() {
   const { t } = useTranslation();
   const router = useRouter();
   const [numberEatDrug, setNumberEatDrug] = useState([1]);
+  const initialValues = {
+    title: "",
+    description: "",
+    times: [""],
+    duration: "",
+  };
+  const onSubmit = async (values) => {
+    console.log(values);
+    let token = localStorage.getItem("token");
+    console.log(values);
+    const response = await fetch(
+      "https://vitainline.uz/api/v1/recommendations",
+      {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+      }
+    );
+  };
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+  });
 
   const handleExit = () => {
     router.pathname = "";
@@ -88,104 +118,121 @@ function Rengen() {
         </div>
 
         {/* body  */}
-        <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
-          <div className="flex justify-between mt-7 mb-3">
-            <div className="flex items-center">
-              <button
-                className="flex items-center dark:text-[#1B3B3C] ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
-                onClick={GoToBackBtn}
-              >
-                <BsArrowLeft className="mx-3" /> {t("account:go_back_btn")}
-              </button>
-              <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
-                {t("add:add_advice")}
-              </h3>
-            </div>
-            <div className="mr-10 flex items-center">
-              <button
-                type="submit"
-                className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
-              >
-                <BsCheck2 className="mr-3" />
-                {t("add:save")}
-              </button>
-            </div>
-          </div>
+        <Formik onSubmit={onSubmit} initialValues={initialValues}>
+          <Form>
+            <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
+              <div className="flex justify-between mt-7 mb-3">
+                <div className="flex items-center">
+                  <button
+                    className="flex items-center dark:text-[#1B3B3C] ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
+                    onClick={GoToBackBtn}
+                  >
+                    <BsArrowLeft className="mx-3" /> {t("account:go_back_btn")}
+                  </button>
+                  <h3 className="text-[24px] ml-[18px] text-[#1B3B3C]">
+                    {t("add:add_advice")}
+                  </h3>
+                </div>
+                <div className="mr-10 flex items-center">
+                  <button
+                    type="submit"
+                    className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
+                  >
+                    <BsCheck2 className="mr-3" />
+                    {t("add:save")}
+                  </button>
+                </div>
+              </div>
 
-          <div className="mx-6 mt-10 rounded-[18px]   border border-[#D7E6E7] relative">
-            <div className="flex">
-              <div className="text-[14px] text-[#759495] pl-5 font-[400] border rounded-tl-[18px] border-[#D7E6E7] w-[270px] flex items-center p-2">
-                {t("add:num_check")}
-                <button
-                  className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px]  ml-auto flex items-center justify-center"
-                  onClick={AddClock}
-                >
-                  <GoPlus className=" text-white " />
-                </button>
-              </div>
-              <div className="text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[180px] flex items-center p-2">
-                <p className="ml-4">{t("add:time")} </p>
-              </div>
-              <div className="text-[14px] text-[#759495] w-[250px] font-[400] border border-[#D7E6E7]  flex items-center p-2">
-                <p className="ml-4">{t("add:name")} </p>
-              </div>
-              <div className="text-[14px] text-[#759495] font-[400] border w-[300px] rounded-tr-[18px] border-[#D7E6E7]  flex items-center p-2">
-                <p className="ml-4 "> {t("add:additional_info")} </p>
-              </div>
-            </div>
-            <div className="flex bg-[#F8FCFC] rounded-b-[18px] min-h-[300px]">
-              <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[270px] pl-5 p-2">
-                {numberEatDrug.map((item, index) => {
+              <FieldArray name="times">
+                {(props) => {
+                  const { push, remove, form } = props;
+                  const { values } = form;
+                  const { times } = values;
                   return (
-                    <div className="my-3" key={item}>
-                      <div className="flex items-center">
-                        <p className="mr-1">
-                          {index + 1}-{t("add:first_num")}{" "}
-                        </p>
-                        <div className="border bg-white border-[#D7E6E7] rounded-[12px] w-[100px] h-[40px] flex items-center">
-                          <BsClock className="text-[#1BB7B5] ml-3" />
-                          <input
+                    <div className="mx-6 mt-10 rounded-[18px]   border border-[#D7E6E7] relative">
+                      <div className="flex">
+                        <div className="text-[14px] text-[#759495] pl-5 font-[400] border rounded-tl-[18px] border-[#D7E6E7] w-[270px] flex items-center p-2">
+                          {t("add:num_check")}
+                          <button
+                            className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px]  ml-auto flex items-center justify-center"
+                            onClick={() => push("")}
+                          >
+                            <GoPlus className=" text-white " />
+                          </button>
+                        </div>
+                        <div className="text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[180px] flex items-center p-2">
+                          <p className="ml-4">{t("add:time")} </p>
+                        </div>
+                        <div className="text-[14px] text-[#759495] w-[250px] font-[400] border border-[#D7E6E7]  flex items-center p-2">
+                          <p className="ml-4">{t("add:name")} </p>
+                        </div>
+                        <div className="text-[14px] text-[#759495] font-[400] border w-[300px] rounded-tr-[18px] border-[#D7E6E7]  flex items-center p-2">
+                          <p className="ml-4 "> {t("add:additional_info")} </p>
+                        </div>
+                      </div>
+                      <div className="flex bg-[#F8FCFC] rounded-b-[18px] min-h-[300px]">
+                        <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[270px] pl-5 p-2">
+                          {times.map((item, index) => {
+                            return (
+                              <div className="my-3" key={item}>
+                                <div className="flex items-center">
+                                  <p className="mr-1">
+                                    {index + 1}-{t("add:first_num")}{" "}
+                                  </p>
+                                  <div className="border bg-white border-[#D7E6E7] rounded-[12px] w-[100px] h-[40px] flex items-center">
+                                    <BsClock className="text-[#1BB7B5] ml-3" />
+                                    <Field
+                                      type="time"
+                                      format="HH:mm"
+                                      name={`times[${index}]`}
+                                      className="w-9 h-3  outline-none dark:bg-white dark:text-black placeholder:text-[#C5D7D8]"
+                                    />
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                  >
+                                    <IoIosClose className="text-[20px] ml-1" />
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="border w-[182px]  border-[#D7E6E7] ">
+                          <Field
                             type="text"
-                            placeholder="00:00"
-                            className="w-9 h-4 ml-2 dark:bg-white dark:text-black outline-none placeholder:text-[#C5D7D8]"
+                            name="duration"
+                            placeholder={t("add:days")}
+                            className="border placeholder:text-[#C5D7D8] w-[120px] dark:bg-white dark:text-black border-[#D7E6E7]  mx-4 h-11 rounded-xl px-2 mt-4"
                           />
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => removeElement(index)}
-                        >
-                          <IoIosClose className="text-[20px] ml-1" />
-                        </button>
+                        <div className="border  border-[#D7E6E7] w-[250px] ">
+                          <Field
+                            type="text"
+                            name="title"
+                            placeholder="Nomini kiriting"
+                            className="border placeholder:text-[#C5D7D8] dark:bg-white dark:text-black border-[#D7E6E7] mx-4 h-11 rounded-xl px-2 mt-4"
+                          />
+                        </div>
+                        <div className="border border-[#D7E6E7] w-[302px] rounded-br-[18px]">
+                          <Field
+                            as="textarea"
+                            name="description"
+                            rows={3}
+                            className="border placeholder:text-[#C5D7D8] w-[260px] dark:bg-white dark:text-black  mx-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
+                            placeholder={t("add:add_info_input")}
+                          />
+                        </div>
                       </div>
                     </div>
                   );
-                })}
-              </div>
-              <div className="border w-[182px]  border-[#D7E6E7] ">
-                <input
-                  type="text"
-                  placeholder={t("add:days")}
-                  className="border placeholder:text-[#C5D7D8] w-[120px] dark:bg-white dark:text-black border-[#D7E6E7]  mx-4 h-11 rounded-xl px-2 mt-4"
-                />
-              </div>
-              <div className="border  border-[#D7E6E7] w-[250px] ">
-                <input
-                  type="text"
-                  placeholder={t("add:days")}
-                  className="border placeholder:text-[#C5D7D8] dark:bg-white dark:text-black border-[#D7E6E7] mx-4 h-11 rounded-xl px-2 mt-4"
-                />
-              </div>
-              <div className="border border-[#D7E6E7] w-[302px] rounded-br-[18px]">
-                <textarea
-                  name="addition-info"
-                  rows={3}
-                  className="border placeholder:text-[#C5D7D8] w-[260px] dark:bg-white dark:text-black  mx-4 px-2 mt-4  rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
-                  placeholder={t("add:add_info_input")}
-                ></textarea>
-              </div>
+                }}
+              </FieldArray>
             </div>
-          </div>
-        </div>
+          </Form>
+        </Formik>
       </div>
     </div>
   );
