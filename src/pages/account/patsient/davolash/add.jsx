@@ -36,13 +36,16 @@ function Add() {
   const [numberEatDrug, setNumberEatDrug] = useState([1]);
   const { choosenPill } = useGlobalContext();
   const initialValues = {
-    pill: "",
-    times: [""],
-    quantity: "",
-    type: "",
-    period: "",
-    extraInformation: "",
-    groups: [""],
+    healings: [
+      {
+        pill: "",
+        times: [""],
+        quantity: "",
+        type: "",
+        period: "",
+        extraInformation: "",
+      },
+    ],
   };
   const onSubmit = async (values) => {
     let token = localStorage.getItem("token");
@@ -140,11 +143,11 @@ function Add() {
 
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
           <Form>
-            <FieldArray name="times">
+            <FieldArray name="healings">
               {(props) => {
                 const { push, remove, form } = props;
                 const { values } = form;
-                const { groups } = values;
+                const { healings } = values;
                 return (
                   <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
                     <div className="flex justify-between mt-7 mb-3">
@@ -170,7 +173,7 @@ function Add() {
                         </button>
                       </div>
                     </div>
-                    {groups.map((group, index) => {
+                    {healings.map((group, index) => {
                       return (
                         <div key={index}>
                           <div
@@ -178,42 +181,47 @@ function Add() {
                             key={index}
                           >
                             <div className="text-left flex ">
-                              <div className="flex flex-col">
-                                <div className="text-[14px] pl-5 text-[#759495] rounded-tl-[18px]  font-[400] w-[200px] border border-[#D7E6E7] p-2 ">
+                              <div className="flex flex-col border border-[#D7E6E7]  rounded-l-[18px]">
+                                <div className="text-[14px] pl-5 text-[#759495] h-18 border-b font-[400] w-[200px]  p-2 ">
                                   {t("add:tool")}
                                 </div>
-                                <div className="text-[14px] text-[#759495] rounded-bl-[18px]  font-[400] w-[200px] border border-[#D7E6E7] p-2 ">
+                                <div className="text-[14px] text-[#759495]  h-100%  font-[400] w-[200px]  p-2 ">
                                   <LiveSearch />
                                 </div>
                               </div>
 
-                              <div className="flex flex-col">
-                                <FieldArray>
+                              <div className="flex flex-col  border border-[#D7E6E7] ">
+                                <FieldArray name={`healings[${index}].times`}>
                                   {(arrayProps) => {
-                                    const { times } = values;
+                                    const { form, push, remove } = arrayProps;
+                                    const { values } = form;
+                                    const { healings } = values;
                                     return (
                                       <div>
                                         <div
-                                          className="text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[200px] flex items-center p-2"
+                                          className="text-[14px] h-[38px] pl-2 text-[#759495] flex font-[400] border-b w-[200px] items-center "
                                           type="button"
                                         >
                                           {t("add:how_much")}
                                           <button
                                             className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px] ml-3 flex items-center justify-center"
-                                            onClick={() => arrayProps.push("")}
+                                            onClick={() => push("")}
                                           >
                                             <GoPlus className=" text-white " />
                                           </button>
                                         </div>
 
-                                        <div className="flex flex-col text-[14px] text-[#759495] font-[400] border border-[#D7E6E7] w-[200px]   items-center p-2">
-                                          {arrayProps.form.values.times.map(
-                                            (time, i) => {
+                                        <div className="flex flex-col text-[14px] text-[#759495] font-[400]    items-center p-2">
+                                          {healings[0].times.map(
+                                            (time, idx) => {
                                               return (
-                                                <div className="my-3" key={i}>
+                                                <div
+                                                  className="my-3"
+                                                  key={healings[index].idx}
+                                                >
                                                   <div className="flex items-center">
                                                     <p className="mr-1">
-                                                      {index + 1}-
+                                                      {idx + 1}-
                                                       {t("add:first_num")}
                                                     </p>
                                                     <div className="border border-[#D7E6E7] rounded-[12px] w-[77px] h-[34px] flex  justify-around items-center">
@@ -221,14 +229,14 @@ function Add() {
                                                       <Field
                                                         type="time"
                                                         format="HH:mm"
-                                                        name={`times[${i}]`}
+                                                        name={`healings[${index}].times[${idx}]`}
                                                         className="w-9 h-3  outline-none dark:bg-white dark:text-black placeholder:text-[#C5D7D8]"
                                                       />
                                                     </div>
                                                     <button
                                                       type="button"
                                                       onClick={() =>
-                                                        arrayProps.remove(i)
+                                                        remove(idx)
                                                       }
                                                     >
                                                       <IoIosClose className="text-[20px] ml-1" />
@@ -244,39 +252,44 @@ function Add() {
                                   }}
                                 </FieldArray>
                               </div>
-                              <div className="flex flex-col">
-                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
+                              <div className="flex flex-col border border-[#D7E6E7]">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border-b border-[#D7E6E7]">
                                   {t("add:num_eat")}
                                 </div>
-                                <div className="text-[14px] text-[#759495]  font-[400] w-[150px] p-2 border border-[#D7E6E7] flex">
+                                <div className="text-[14px] text-[#759495] mt-3  items-center font-[400] w-[150px] p-2  flex">
                                   <button
                                     className="bg-white border ml-3  border-[#E9F6F6] rounded-[8px] w-8 h-8"
                                     onClick={subsNumBtn}
                                   >
                                     <GrSubtract className="mx-auto" />
                                   </button>
-                                  <p className="mx-2 text-[#1B3B3C] mt-1">
-                                    {drugsNum}
-                                  </p>
+                                  <Field
+                                    name={`healings[${index}].quantity`}
+                                    value={drugsNum}
+                                    className=" ml-4 text-[#1B3B3C]  rounded-[8px] w-8 h-8"
+                                  />
                                   <button
-                                    className="rounded-[8px] w-8 h-8 bg-[#1BB7B5] pb-1 text-[30px] leading-3 text-white "
+                                    className="rounded-[8px] w-8 h-8 bg-[#1BB7B5] pb-1 ml-0 text-[30px] leading-3 text-white "
                                     onClick={addNumBtn}
                                   >
                                     +
                                   </button>
                                 </div>
                               </div>
-                              <div className="flex flex-col">
-                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
+                              <div className="flex flex-col border border-[#D7E6E7]">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border-b border-[#D7E6E7]">
                                   {t("add:schedule_eat")}
                                 </div>
-                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 border border-[#D7E6E7]">
-                                  <Field as="fieldset" name="type">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[150px] p-2 ">
+                                  <Field
+                                    as="fieldset"
+                                    name={`healings[${index}].type`}
+                                  >
                                     <div className="border border-[#D7E6E7] p-1 rounded-xl">
                                       <input
                                         type="radio"
                                         id="radio1"
-                                        name="type"
+                                        name={`healings[${index}].type`}
                                         value="Ovqatdan oldin"
                                         className=" dark:border-[#D7E6E7] brightness-150 active:brightness-150  hover:brightness-150 "
                                       />
@@ -292,7 +305,7 @@ function Add() {
                                         type="radio"
                                         id="radio2"
                                         value="Ovqatdan keyin"
-                                        name="type"
+                                        name={`healings[${index}].type`}
                                         className=" brightness-150  p-2 after:w-2 after:h-2 active:brightness-150  hover:brightness-150"
                                       />
                                       <label
@@ -305,30 +318,30 @@ function Add() {
                                   </Field>
                                 </div>
                               </div>
-                              <div className="flex flex-col">
-                                <div className="text-[14px] text-[#759495] font-[400] w-[120px] p-2 border border-[#D7E6E7]">
+                              <div className="flex flex-col border border-[#D7E6E7]">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[120px] p-2 border-b border-[#D7E6E7]">
                                   <p className="w-[90px]">{t("add:time")}</p>
                                 </div>
-                                <div className="text-[14px] text-[#759495] font-[400] w-[120px] p-2 border border-[#D7E6E7]">
+                                <div className="text-[14px] text-[#759495] font-[400] w-[120px] p-2 ">
                                   <Field
                                     type="text"
                                     placeholder={t("add:days")}
-                                    name="period"
+                                    name={`healings[${index}].period`}
                                     className="outline-none dark:bg-white dark:text-black p-2 border border-[#D7E6E7] rounded-xl w-[100%]"
                                   />
                                 </div>
                               </div>
-                              <div className="flex flex-col">
-                                <div className="text-[14px] text-[#759495] font-[400] w-[200px] rounded-tr-[18px] p-2 border border-[#D7E6E7]">
+                              <div className="flex flex-col border border-[#D7E6E7] w-[156px] rounded-r-[18px]">
+                                <div className="text-[14px] text-[#759495] font-[400]  w-full p-2 border-b border-[#D7E6E7]">
                                   {t("add:additional_info")}
                                 </div>
-                                <div className="text-[14px] text-[#759495] font-[400]  p-2 w-[200px] rounded-br-[18px]  border border-[#D7E6E7]">
+                                <div className="text-[14px] text-[#759495] font-[400] w-full p-2">
                                   <Field
                                     as="textarea"
-                                    name="extraInformation"
-                                    rows={4}
-                                    className="border w-[170px] dark:bg-white dark:text-black rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
-                                    placeholder={t("add:add_info_input")}
+                                    name={`healings[${index}].extraInformation`}
+                                    rows={3}
+                                    className="border  w-[140px] dark:bg-white dark:text-black rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
+                                    placeholder={t("add:add_info_input`")}
                                   ></Field>
                                 </div>
                               </div>

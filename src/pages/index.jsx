@@ -133,6 +133,7 @@ export default function Home(props) {
             <div className="border relative border-[#D7E6E7] rounded-[12px]">
               <input
                 name="password"
+                type={inputType}
                 className=" w-full p-2 rounded-[12px] dark:bg-white dark:text-black"
                 placeholder="*******"
                 {...register("password", { required: true })}
