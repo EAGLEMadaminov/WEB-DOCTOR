@@ -3,19 +3,9 @@ import { useGlobalContext } from "@/context";
 
 function KonsultatsiyaModal({data}) {
   console.log(data);
-  // let day = data.time.getDate();
-  //   if (day < 10) {
-  //     day = `0${day}`;
-  //   }
-  //   let month = data.time.getMonth() + 1;
-  //   if (month < 10) {
-  //     month = `0${month}`;
-  //   }
-  //   const year = data.time.getFullYear();
-  //   const contain = `${day}.${month}.${year}`;
-  //   delete data.time;
   const handleSendBtn = async () => {
     console.log(data);
+    
     let token = localStorage.getItem("token");
 
     const response = await fetch("https://vitainline.uz/api/v1/consultations", {
@@ -29,6 +19,7 @@ function KonsultatsiyaModal({data}) {
     if (response.status === 200) {
       window.location.pathname = "/account/patsient/konsultatsiya";
     }
+    setKonModal(false);
   };
   const { setKonModal } = useGlobalContext();
   return (
@@ -50,9 +41,7 @@ function KonsultatsiyaModal({data}) {
           <button
             type="submit"
             className="w-[180px] rounded-[12px] font-[500] text-white bg-[#1BB7B5]"
-            onClick={() => {
-              handleSendBtn, setKonModal(false);
-            }}
+            onClick={() => handleSendBtn}
           >
             Xa
           </button>

@@ -64,12 +64,28 @@ function Add() {
     description: "",
   };
   let alldata = {};
+
   const onSubmit = (data) => {
+    console.log(data);
     let id = localStorage.getItem("patId");
     data.patientId = id;
+    console.log(data.time);
+    let day = new Date(data.time).getDate();
+    if (day < 10) {
+      day = `0${day}`;
+    }
+    let month = new Date(data.time).getMonth() + 1;
+    if (month < 10) {
+      month = `0${month}`;
+    }
+    const year = new Date(data.time).getFullYear();
+    const contain = `${day}.${month}.${year}`;
+    console.log(contain);
+    data.time = contain;
+    console.log(data);
     alldata = data;
-    setKonModal(true);
     console.log(alldata);
+    setKonModal(true);
   };
 
   const formik = useFormik({
