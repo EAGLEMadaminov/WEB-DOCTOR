@@ -109,9 +109,6 @@ function Account() {
       "https://vitainline.uz/api/v1/auth/signin/patient",
       {
         method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
@@ -120,9 +117,11 @@ function Account() {
     );
 
     const info = await response.json();
+    console.log(info);
     localStorage.setItem("ptoken", info.token);
 
     if (response.status === 200) {
+      localStorage.setItem("patId", info.data.id);
       setPatsientName(info.data.fullname);
       setShowInfo(true);
     }

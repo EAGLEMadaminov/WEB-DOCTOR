@@ -8,6 +8,7 @@ const AppProvider = ({ children }) => {
   const [konModal, setKonModal] = useState(false);
   const [registerInfo, setRegisterInfo] = useState("");
   const [choosenPill, setChoosenPill] = useState("");
+  const [patsientInfo, setPatsientInfo] = useState("");
 
   const inialValue = {
     birthday: "",
@@ -35,6 +36,8 @@ const AppProvider = ({ children }) => {
         setRegisterInfo,
         choosenPill,
         setChoosenPill,
+        patsientInfo,
+        setPatsientInfo,
       }}
     >
       {children}

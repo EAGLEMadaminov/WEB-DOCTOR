@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import img from "../../../../images/cite-logo.png";
 import { FiChevronDown } from "react-icons/fi";
@@ -26,6 +26,38 @@ function Tavsiyanoma() {
   const { t } = useTranslation();
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
+  const [recomData, setRecomData] = useState("");
+  const [hasInfo, setHasInfo] = useState(false);
+  let sortInfo = [];
+  const fetchFunck = async () => {
+    let token = localStorage.getItem("ptoken");
+    let id = localStorage.getItem("tavsiyaId");
+    const response = await fetch(
+      `https://vitainline.uz/api/v1/recommendations/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const jsonData = await response.json();
+    console.log(jsonData);
+    if (response.status == 200) {
+      setRecomData(jsonData);
+      setHasInfo(true);
+      sortInfo = jsonData.data.times.filter((item) => {
+        if (item !== "") {
+          return item;
+        }
+      });
+    }
+  };
+  useEffect(() => {
+    fetchFunck();
+  }, []);
+  console.log(sortInfo);
 
   const handleTavsiyahistoryBtn = () => {
     router.push("/account/patsient/tavsiyanoma/history");
@@ -49,14 +81,19 @@ function Tavsiyanoma() {
       window.location.pathname = "/account/patsient/tavsiyanoma";
     }
   };
-
   return (
     <div className="h-[100vh]  bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} />
+            <Image
+              src={img}
+              width={50}
+              height={50}
+              alt="logo"
+              className="w-auto"
+            />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
@@ -120,73 +157,35 @@ function Tavsiyanoma() {
             </h2>
           </div>
 
-          <div className="flex mx-10 mt-5 mb-20">
-            <div className="border rounded-[12px] dark:text-[#1B3B3C] p-3 flex  shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px]  ">
-              <div className="flex items-center  mb-2">
-                <span className="bg-[url('../images/tavsiyanoma/davleniya.png')]  bg-center  rounded-[32px] bg-[#EAF9FB] bg-no-repeat w-8 h-8"></span>
-                <p className="text-[#1B3B3C]  ml-2 font-[500] flex">
-                  {t("account:check_dav")}
-                </p>
-              </div>
-              <div className="flex items-center rounded-[8px] mb-3 px-2 h-[42px]   bg-[#E8FCEB] text-[12px]">
-                <p className="bg-[url('../images/davolash/correct.png')] bg-no-repeat w-3 h-2 text-[#0CBB26]"></p>
-                <BsClock className="text-[#1BB7B5] mx-2 ml-[14px]" />
-                <del>8:00</del>
-              </div>
-              <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]   bg-[#E8FCEB] text-[12px]">
-                <p className="bg-[url('../images/davolash/correct.png')] bg-no-repeat w-3 h-2 text-[#0CBB26]"></p>
-                <BsClock className="text-[#1BB7B5] mx-2 ml-[14px]" />
-                <del>8:00</del>
-              </div>
-
-              <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px] bg-[#FFF1F1] text-[12px]">
-                <p className="text-[10px] text-[#DE0C0C] font-[900]">╳</p>
-                <BsClock className="text-[#B48C8C] mx-2 ml-[14px]" />
-                <p>12:00</p>
-              </div>
-
-              <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
-                <BsClock className="text-[#1BB7B5] mx-2" />
-                <p>12:00</p>
+          {hasInfo ? (
+            <div className="flex mx-10 mt-5 mb-20">
+              <div className="border rounded-[12px] dark:text-[#1B3B3C] p-3 flex  shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px]  ">
+                <div className="flex items-center  mb-2">
+                  <span className="bg-[url('../images/tavsiyanoma/davleniya.png')]  bg-center  rounded-[32px] bg-[#EAF9FB] bg-no-repeat w-8 h-8"></span>
+                  <p className="text-[#1B3B3C]  ml-2 font-[500] flex">
+                    {recomData.data.title}
+                  </p>
+                </div>
+                {recomData.data.times.map((time, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]"
+                    >
+                      <BsClock className="text-[#1BB7B5] mx-2" />
+                      <p>{time} </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-
-            <div className="border rounded-[12px] dark:text-[#1B3B3C] shadow-[0px_6px_16px] shadow-[#EFF4F4] p-3 flex flex-col w-[305px] ml-4 ">
-              <div className="flex items-center mb-2">
-                <span className="bg-[url('../images/tavsiyanoma/analiz.png')] bg-center  rounded-[32px] bg-[#EAF9FB] bg-no-repeat w-8 h-8"></span>
-                <p className="text-[#1B3B3C]  ml-2 font-[500] flex items-center">
-                  {t("account:blood")}
-                  <AiOutlineExclamationCircle className="rotate-180 text-[#1BB7B5] text-[18px] ml-3" />
-                </p>
-              </div>
-              <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                <p className="bg-[url('../images/davolash/correct.png')] bg-no-repeat w-3 h-2 text-[#0CBB26]"></p>
-                <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                <p>12:00</p>
-
-                <p className="text-[#86BC8E] ml-auto">{t("account:belly")} </p>
-              </div>
+          ) : (
+            // })
+            <div className="w-[194px] text-center mx-auto my-[150px]">
+              <span className="block bg-[url('../images/davolash/history.png')] mx-auto w-20 h-20 bg-center rounded-[80px] bg-[#EAF9FB] bg-no-repeat"></span>
+              <p className="text-[#759495]">{t("account:no-info")}</p>
             </div>
-
-            <div className="border dark:text-[#1B3B3C] shadow-[0px_6px_16px] shadow-[#EFF4F4] rounded-[12px] p-3 flex flex-col w-[305px] ml-4 ">
-              <div className="flex items-center mb-2">
-                <span className="bg-[url('../images/tavsiyanoma/rentgen.png')] bg-no-repeat w-8 h-8"></span>
-                <p className="text-[#1B3B3C]  ml-2 font-[500] flex items-center">
-                  {t("account:rengen")}
-                  <AiOutlineExclamationCircle className="rotate-180 text-[#1BB7B5] text-[18px] ml-3" />
-                </p>
-              </div>
-
-              <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-[16px] h-5"></p>
-                <BsClock className="text-[#1BB7B5] mx-2 ml-3 " />
-                <p>12:00</p>
-
-                <p className="text-[#86BC8E] ml-auto ">{t("account:belly")} </p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

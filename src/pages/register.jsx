@@ -223,8 +223,8 @@ export default function Register(props) {
                     onChange={(date) => {
                       setStartDate(date), handleChange;
                     }}
-                    peekNextMonth
                     dateFormat="dd.MM.yyyy"
+                    peekNextMonth
                     showMonthDropdown
                     showYearDropdown
                     name="birthday"

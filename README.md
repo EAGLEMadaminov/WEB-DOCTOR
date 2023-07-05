@@ -1,6 +1,7 @@
-button bosilganda ichida search chiqadigan qilib form elementi yasash
-2 barcha form ichidagilarni backendga mos qilim FormDataga yig'ish
-davolash add ni apiga ulash
+1 datapicker
+2 davolash add
+3 dorilar searchni tugatish
+4
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

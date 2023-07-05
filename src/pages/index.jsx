@@ -118,6 +118,7 @@ export default function Home(props) {
             </label>
             <input
               name="passport"
+              maxLength={10}
               className="border border-[#D7E6E7] rounded-[12px] p-2 dark:bg-white dark:text-black"
               type="text"
               {...register("passport", { required: true })}
@@ -134,6 +135,7 @@ export default function Home(props) {
               <input
                 name="password"
                 type={inputType}
+                minLength={4}
                 className=" w-full p-2 rounded-[12px] dark:bg-white dark:text-black"
                 placeholder="*******"
                 {...register("password", { required: true })}

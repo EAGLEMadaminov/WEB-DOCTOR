@@ -24,18 +24,14 @@ export async function getStaticProps({ locale }) {
 }
 
 function Patsient() {
-  const [patsientInfo, setPatsientInfo] = useState("");
   const { t } = useTranslation();
-  const { registerInfo } = useGlobalContext();
+  const { registerInfo, patsientInfo, setPatsientInfo } = useGlobalContext();
   const router = useRouter();
 
   const fetchFunck = async () => {
     let token = localStorage.getItem("ptoken");
     const singResponse = await fetch("https://vitainline.uz/api/v1/auth/user", {
       method: "GET",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

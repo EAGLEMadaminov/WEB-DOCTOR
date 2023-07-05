@@ -13,6 +13,7 @@ import { IoIosClose } from "react-icons/io";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { FieldArray, useFormik, Formik, Form, Field } from "formik";
+import { useGlobalContext } from "@/context";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -36,13 +37,11 @@ function Rengen() {
     console.log(values);
     let token = localStorage.getItem("token");
     console.log(values);
+    values.patientId = localStorage.getItem("patId");
     const response = await fetch(
       "https://vitainline.uz/api/v1/recommendations",
       {
         method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -50,6 +49,12 @@ function Rengen() {
         body: JSON.stringify(values),
       }
     );
+    const info = await response.json();
+    console.log(info.data.id);
+    localStorage.setItem("tavsiyaId", info.data.id);
+    if (response.status === 200) {
+      window.location.pathname = "/account/patsient/tavsiyanoma";
+    }
   };
   const formik = useFormik({
     initialValues,
@@ -175,10 +180,10 @@ function Rengen() {
                         <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[270px] pl-5 p-2">
                           {times.map((item, index) => {
                             return (
-                              <div className="my-3" key={item}>
+                              <div className="my-3" key={index + 1}>
                                 <div className="flex items-center">
                                   <p className="mr-1">
-                                    {index + 1}-{t("add:first_num")}{" "}
+                                    {index + 1}-{t("add:first_num")}
                                   </p>
                                   <div className="border bg-white border-[#D7E6E7] rounded-[12px] w-[100px] h-[40px] flex items-center">
                                     <BsClock className="text-[#1BB7B5] ml-3" />
@@ -202,10 +207,10 @@ function Rengen() {
                         </div>
                         <div className="border w-[182px]  border-[#D7E6E7] ">
                           <Field
-                            type="text"
+                            type="number"
                             name="duration"
                             placeholder={t("add:days")}
-                            className="border placeholder:text-[#C5D7D8] w-[120px] dark:bg-white dark:text-black border-[#D7E6E7]  mx-4 h-11 rounded-xl px-2 mt-4"
+                            className="border placeholder:text-[#C5D7D8] outline-none w-[120px] dark:bg-white dark:text-black border-[#D7E6E7]  mx-4 h-11 rounded-xl px-2 mt-4"
                           />
                         </div>
                         <div className="border  border-[#D7E6E7] w-[250px] ">
@@ -213,7 +218,7 @@ function Rengen() {
                             type="text"
                             name="title"
                             placeholder="Nomini kiriting"
-                            className="border placeholder:text-[#C5D7D8] dark:bg-white dark:text-black border-[#D7E6E7] mx-4 h-11 rounded-xl px-2 mt-4"
+                            className="border placeholder:text-[#C5D7D8] outline-none dark:bg-white dark:text-black border-[#D7E6E7] mx-4 h-11 rounded-xl px-2 mt-4"
                           />
                         </div>
                         <div className="border border-[#D7E6E7] w-[302px] rounded-br-[18px]">

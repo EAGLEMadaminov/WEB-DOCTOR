@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import img from "../../../../images/cite-logo.png";
 import { FiChevronDown } from "react-icons/fi";
@@ -10,6 +10,9 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { BsClock } from "react-icons/bs";
+import { RxDotFilled } from "react-icons/rx";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -22,6 +25,9 @@ export async function getStaticProps({ locale }) {
 function Davolash() {
   const { t } = useTranslation();
   const router = useRouter();
+  const [hasInfo, setHasInfo] = useState(false);
+  const [hillInfo, setHilInfo] = useState("");
+
   const GoToBackBtn = () => {
     router.push("/account/patsient/davolash");
   };
@@ -41,8 +47,35 @@ function Davolash() {
       window.location.pathname = "/account/patsient/davolash/history";
     }
   };
+
+  const fetchFunck = async () => {
+    setHasInfo(false);
+    let token = localStorage.getItem("ptoken");
+    const response = await fetch(
+      `https://vitainline.uz/api/v1/healings/patient?type=history`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const jsonData = await response.json();
+    console.log(jsonData);
+
+    if (response.status === 200) {
+      setHilInfo(jsonData);
+      setHasInfo(true);
+    }
+  };
+  useEffect(() => {
+    fetchFunck();
+  }, []);
+
+  console.log(hillInfo.endedDate)
   return (
-    <div className="h-[100vh]  bg-[#F7FEFE]">
+    <div className="min-h-[100vh]  bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
@@ -102,11 +135,44 @@ function Davolash() {
               </button>
             </div>
           </div>
-
-          <div className="w-[194px] text-center mx-auto my-[150px]">
-            <span className="block bg-[url('../images/davolash/history.png')] mx-auto w-20 h-20 bg-center rounded-[80px] bg-[#EAF9FB] bg-no-repeat"></span>
-            <p className="text-[#759495]">{t("account:no-info")}</p>
-          </div>
+          {hasInfo ? (
+            <div className="flex flex-wrap ml-8 mt-5">
+              {hillInfo.data.map((item, index) => {
+                return (
+                  <div className="border rounded-[12px] mt-5 shadow-[0px_6px_16px] shadow-[#EFF4F4] p-3 flex flex-col w-[305px] ml-4 cursor-pointer">
+                    <div className="flex items-center mb-2">
+                      <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
+                      <p className="text-[#1B3B3C]  ml-2 font-[500]">
+                        {item.pill}
+                      </p>
+                      <AiOutlineExclamationCircle className="rotate-180 text-[#1BB7B5] text-[18px] ml-3" />
+                    </div>
+                    {item.times.map((time, idx) => {
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-center mb-3 rounded-[8px] px-2 h-[42px] justify-between  bg-[#E8FCEB] text-[12px]"
+                        >
+                          <BsClock className="text-[#1BB7B5] " />
+                          <p className="dark:text-[#1B3B3C]">{time}</p>
+                          <p className="text-[#86BC8E]  ">
+                            {item.quantity} {t("account:num_drug")}
+                          </p>
+                          <RxDotFilled className="text-[#1BB7B5]" />
+                          <p className="text-[#86BC8E] ">{item.type}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="w-[194px] text-center mx-auto my-[150px]">
+              <span className="block bg-[url('../images/davolash/history.png')] mx-auto w-20 h-20 bg-center rounded-[80px] bg-[#EAF9FB] bg-no-repeat"></span>
+              <p className="text-[#759495]">{t("account:no-info")}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

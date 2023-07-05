@@ -11,6 +11,7 @@ import { BsClock } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { useEffect } from "react";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -24,6 +25,8 @@ function History() {
   const { t } = useTranslation();
   const router = useRouter();
   const [hasInfo, setHasInfo] = useState(false);
+  const [consInfo, setConsInfo] = useState("");
+
   const handleTavsiyahistoryBtn = () => {
     router.push("/account/patsient/konsultatsiya/history");
   };
@@ -43,6 +46,31 @@ function History() {
       window.location.pathname = "/account/patsient/konsultatsiya/history";
     }
   };
+
+  const fetchFunck = async () => {
+    let token = localStorage.getItem("ptoken");
+    const response = await fetch(
+      "https://vitainline.uz/api/v1/consultations/patient?type=history",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const jsonData = await response.json();
+    console.log(jsonData);
+    if (response.status === 200 && jsonData.data !== []) {
+      setConsInfo(jsonData);
+      setHasInfo(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchFunck();
+  }, []);
+
   return (
     <div className="h-[100vh]  bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
@@ -94,64 +122,37 @@ function History() {
 
           {hasInfo ? (
             <div>
-              <div className=" text-center dark:text-[#1B3B3C]  mx-10">
-                <h2 className="davolash-line w-[875px] mx-10">22.05.2023</h2>
-              </div>
+              {consInfo.data.map((item, index) => {
+                return (
+                  <div>
+                    <div className=" text-center dark:text-[#1B3B3C]  mx-10">
+                      <h2 className="davolash-line w-[875px] mx-10">
+                        22.05.2023
+                      </h2>
+                    </div>
 
-              <div className="flex mx-10 mt-5 mb-20">
-                <div
-                  className="border rounded-[12px] p-3 flex  flex-col  shadow-[0px_6px_16px] shadow-[#EFF4F4] w-[305px] cursor-pointer "
-                  onClick={showFormBtn}
-                >
-                  <div className="flex items-center mb-2">
-                    <div className="bg-[url('../images/konsultatsiya/doctor.png')] object-cover bg-center bg-no-repeat w-8 h-8"></div>
-                    <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                      {t("account:consult_with")}
-                    </p>
-                  </div>
+                    <div className="flex mx-10 mt-5 mb-20">
+                      <div
+                        className="border rounded-[12px] p-3 flex  flex-col  shadow-[0px_6px_16px] shadow-[#EFF4F4] w-[305px] cursor-pointer "
+                        onClick={showFormBtn}
+                      >
+                        <div className="flex items-center mb-2">
+                          <div className="bg-[url('../images/konsultatsiya/doctor.png')] object-cover bg-center bg-no-repeat w-8 h-8"></div>
+                          <p className="text-[#1B3B3C]  ml-2 font-[500]">
+                            {t("account:consult_with")}
+                          </p>
+                        </div>
 
-                  <div className=" dark:text-[#1B3B3C] flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                    <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
-                    <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                    <p>12:00</p>
+                        <div className=" dark:text-[#1B3B3C] flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
+                          <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
+                          <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
+                          <p>12:00</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-
-                <div
-                  className="border rounded-[12px] p-3  shadow-[0px_6px_16px] shadow-[#EFF4F4] flex flex-col w-[305px] ml-4 cursor-pointer"
-                  onClick={showFormBtn}
-                >
-                  <div className="flex items-center mb-2">
-                    <div className="bg-[url('../images/konsultatsiya/doctor.png')] bg-no-repeat w-8 h-8"></div>
-                    <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                      {t("account:consult_with")}
-                    </p>
-                  </div>
-                  <div className="dark:text-[#1B3B3C] flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                    <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
-                    <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                    <p>12:00</p>
-                  </div>
-                </div>
-
-                <div
-                  className="border   rounded-[12px]  shadow-[0px_6px_16px] shadow-[#EFF4F4] p-3 flex flex-col w-[305px] ml-4 cursor-pointer"
-                  onClick={showFormBtn}
-                >
-                  <div className="flex items-center mb-2">
-                    <div className="bg-[url('../images/konsultatsiya/doctor.png')] bg-no-repeat w-8 h-8"></div>
-                    <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                      {t("account:consult_with")}
-                    </p>
-                  </div>
-
-                  <div className="flex dark:text-[#1B3B3C] items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                    <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
-                    <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                    <p>12:00</p>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           ) : (
             <div className="w-[194px] text-center mx-auto my-[120px]">

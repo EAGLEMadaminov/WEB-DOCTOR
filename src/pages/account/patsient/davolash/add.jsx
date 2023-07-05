@@ -52,9 +52,6 @@ function Add() {
     console.log(values);
     const response = await fetch("https://vitainline.uz/api/v1/healings", {
       method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -181,7 +178,7 @@ function Add() {
                             key={index}
                           >
                             <div className="text-left flex ">
-                              <div className="flex flex-col border border-[#D7E6E7]  rounded-l-[18px]">
+                              <div className="flex flex-col border min-h-[300px] border-[#D7E6E7]  rounded-l-[18px]">
                                 <div className="text-[14px] pl-5 text-[#759495] h-18 border-b font-[400] w-[200px]  p-2 ">
                                   {t("add:tool")}
                                 </div>
@@ -196,6 +193,7 @@ function Add() {
                                     const { form, push, remove } = arrayProps;
                                     const { values } = form;
                                     const { healings } = values;
+                                    console.log(healings[0]);
                                     return (
                                       <div>
                                         <div
@@ -215,12 +213,12 @@ function Add() {
                                           {healings[0].times.map(
                                             (time, idx) => {
                                               return (
-                                                <div
-                                                  className="my-3"
-                                                  key={healings[index].idx}
-                                                >
+                                                <div className="my-3">
                                                   <div className="flex items-center">
-                                                    <p className="mr-1">
+                                                    <p
+                                                      key={idx}
+                                                      className="mr-1"
+                                                    >
                                                       {idx + 1}-
                                                       {t("add:first_num")}
                                                     </p>
@@ -265,8 +263,9 @@ function Add() {
                                   </button>
                                   <Field
                                     name={`healings[${index}].quantity`}
+                                    disabled
                                     value={drugsNum}
-                                    className=" ml-4 text-[#1B3B3C]  rounded-[8px] w-8 h-8"
+                                    className=" ml-4 text-[#1B3B3C]  disabled:bg-transparent outline-none  rounded-[8px] w-8 h-8"
                                   />
                                   <button
                                     className="rounded-[8px] w-8 h-8 bg-[#1BB7B5] pb-1 ml-0 text-[30px] leading-3 text-white "
@@ -341,7 +340,7 @@ function Add() {
                                     name={`healings[${index}].extraInformation`}
                                     rows={3}
                                     className="border  w-[140px] dark:bg-white dark:text-black rounded-xl p-1 border-[#D7E6E7] resize-none outline-none "
-                                    placeholder={t("add:add_info_input`")}
+                                    placeholder={t("add:add_info_input")}
                                   ></Field>
                                 </div>
                               </div>

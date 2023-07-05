@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import img from "../../../../images/cite-logo.png";
 import { FiChevronDown } from "react-icons/fi";
@@ -24,9 +24,35 @@ function Kansultatsiya() {
   const { t } = useTranslation();
   const router = useRouter();
   const [hasInfo, setHasInfo] = useState(true);
+  const [consulData, setConsulData] = useState("");
+
   const handleTavsiyahistoryBtn = () => {
     router.push("/account/patsient/konsultatsiya/history");
   };
+
+  const fetchFunck = async () => {
+    let token = localStorage.getItem("ptoken");
+    let id = localStorage.getItem("tavsiyaId");
+    const response = await fetch(
+      `https://vitainline.uz/api/v1/consultations/patient?type=current`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const jsonData = await response.json();
+    console.log(jsonData);
+    if (response.status == 200) {
+      setConsulData(jsonData);
+      setHasInfo(true);
+    }
+  };
+  useEffect(() => {
+    fetchFunck();
+  }, []);
   const GoToBackBtn = () => {
     router.push("/account/patsient");
   };
@@ -53,7 +79,13 @@ function Kansultatsiya() {
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} />
+            <Image
+              src={img}
+              width={50}
+              height={50}
+              alt="logo"
+              className="w-auto"
+            />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
@@ -133,42 +165,7 @@ function Kansultatsiya() {
                 <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
                   <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
                   <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                  <p>12:00</p>
-                </div>
-              </div>
-
-              <div
-                className="border rounded-[12px] dark:text-[#1B3B3C] p-3 shadow-[0px_6px_16px] shadow-[#EFF4F4] flex flex-col w-[305px] ml-4 cursor-pointer"
-                onClick={showFormBtn}
-              >
-                <div className="flex items-center mb-2">
-                  <div className="bg-[url('../images/konsultatsiya/doctor.png')] bg-no-repeat w-8 h-8"></div>
-                  <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                    {t("account:consult_with")}
-                  </p>
-                </div>
-                <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                  <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
-                  <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                  <p>12:00</p>
-                </div>
-              </div>
-
-              <div
-                className="border   rounded-[12px] shadow-[0px_6px_16px] shadow-[#EFF4F4] p-3 flex flex-col w-[305px] ml-4 cursor-pointer"
-                onClick={showFormBtn}
-              >
-                <div className="flex items-center dark:text-[#1B3B3C] mb-2">
-                  <div className="bg-[url('../images/konsultatsiya/doctor.png')] bg-no-repeat w-8 h-8"></div>
-                  <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                    {t("account:consult_with")}
-                  </p>
-                </div>
-
-                <div className="flex dark:text-[#1B3B3C] items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                  <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
-                  <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                  <p>12:00</p>
+                  {/* <p>{consulData.data[0].doctorName}</p> */}
                 </div>
               </div>
             </div>

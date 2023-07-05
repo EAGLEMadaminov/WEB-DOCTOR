@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import img from "../../../../images/cite-logo.png";
 import { FiChevronDown } from "react-icons/fi";
@@ -10,6 +10,8 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { BsClock } from "react-icons/bs";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -19,10 +21,40 @@ export async function getStaticProps({ locale }) {
   };
 }
 
-function Tavsiyanoma() {
+function TavsiyanomaHistory() {
   const { t } = useTranslation();
+  const [allRecom, setAllRecom] = useState("");
+  const [hasInfo, setHasInfo] = useState(false);
+  const time = new Date();
+  console.log(time.getDate());
 
   const router = useRouter();
+
+  const fetchFunck = async () => {
+    setHasInfo(false);
+    let token = localStorage.getItem("ptoken");
+    let id = localStorage.getItem("tavsiyaId");
+    const singResponse = await fetch(
+      `https://vitainline.uz/api/v1/recommendations/patient?type=history`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const jsonData = await singResponse.json();
+    setAllRecom(jsonData);
+
+    if (singResponse.status === 200) {
+      setHasInfo(true);
+    }
+  };
+  useEffect(() => {
+    fetchFunck();
+  }, []);
+
   const GoToBackBtn = () => {
     router.push("/account/patsient/tavsiyanoma");
   };
@@ -42,13 +74,21 @@ function Tavsiyanoma() {
       window.location.pathname = "/account/patsient/tavsiyanoma/history";
     }
   };
+  let array = [];
+
   return (
-    <div className="h-[100vh]  bg-[#F7FEFE]">
+    <div className="min-h-[100vh]  bg-[#F7FEFE]">
       <div className="w-[1035px] mx-auto">
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} />
+            <Image
+              src={img}
+              width={50}
+              height={50}
+              alt="logo"
+              className="w-auto"
+            />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
@@ -94,13 +134,41 @@ function Tavsiyanoma() {
                 <RxCounterClockwiseClock className="mr-[13px]" />{" "}
                 {t("account:history")}
               </button>
-              
             </div>
           </div>
-
-          <div className="w-[194px] text-center mx-auto my-[150px]">
-            <span className="block bg-[url('../images/davolash/history.png')] mx-auto w-20 h-20 bg-center rounded-[80px] bg-[#EAF9FB] bg-no-repeat"></span>
-            <p className="text-[#759495]">{t("account:no-info")}</p>
+          <div className="flex flex-wrap">
+            {hasInfo ? (
+              allRecom.data.map((item) => {
+                return (
+                  <div className="flex mx-2 ml-5 mt-5 mb-20" key={item.id}>
+                    <div className="border rounded-[12px] dark:text-[#1B3B3C] p-3 flex  shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px]  ">
+                      <div className="flex items-center  mb-2">
+                        <span className="bg-[url('../images/tavsiyanoma/davleniya.png')]  bg-center  rounded-[32px] bg-[#EAF9FB] bg-no-repeat w-8 h-8"></span>
+                        <p className="text-[#1B3B3C]  ml-2 font-[500] flex">
+                          <p>{item.title}</p>
+                        </p>
+                      </div>
+                      {item.times.map((time, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="flex items-center rounded-[8px] mb-3 px-2 h-[42px]   bg-[#E8FCEB] text-[12px]"
+                          >
+                            <BsClock className="text-[#1BB7B5] mx-2 ml-[14px]" />
+                            <p>{time}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="w-[194px] text-center mx-auto my-[150px]">
+                <span className="block bg-[url('../images/davolash/history.png')] mx-auto w-20 h-20 bg-center rounded-[80px] bg-[#EAF9FB] bg-no-repeat"></span>
+                <p className="text-[#759495]">{t("account:no-info")}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -108,4 +176,4 @@ function Tavsiyanoma() {
   );
 }
 
-export default Tavsiyanoma;
+export default TavsiyanomaHistory;
