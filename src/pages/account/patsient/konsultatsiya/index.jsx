@@ -11,6 +11,7 @@ import { BsClock } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import { flushSync } from "react-dom";
 
 export async function getStaticProps({ locale }) {
   return {
@@ -24,13 +25,14 @@ function Kansultatsiya() {
   const { t } = useTranslation();
   const router = useRouter();
   const [hasInfo, setHasInfo] = useState(true);
-  const [consulData, setConsulData] = useState("");
+  const [getInfo, setGetInfo] = useState("");
 
   const handleTavsiyahistoryBtn = () => {
     router.push("/account/patsient/konsultatsiya/history");
   };
 
   const fetchFunck = async () => {
+    setHasInfo(false);
     let token = localStorage.getItem("ptoken");
     let id = localStorage.getItem("tavsiyaId");
     const response = await fetch(
@@ -45,8 +47,9 @@ function Kansultatsiya() {
     );
     const jsonData = await response.json();
     console.log(jsonData);
+    console.log(response.status);
     if (response.status == 200) {
-      setConsulData(jsonData);
+      setGetInfo(jsonData);
       setHasInfo(true);
     }
   };
@@ -150,24 +153,32 @@ function Kansultatsiya() {
           </div>
 
           {hasInfo ? (
-            <div className="flex mx-10 mt-5 mb-20">
-              <div
-                className="border rounded-[12px] dark:text-[#1B3B3C] p-3 flex shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px] cursor-pointer "
-                onClick={showFormBtn}
-              >
-                <div className="flex items-center mb-2">
-                  <div className="bg-[url('../images/konsultatsiya/doctor.png')] object-cover bg-center bg-no-repeat w-8 h-8"></div>
-                  <p className="text-[#1B3B3C]  ml-2 font-[500]">
-                    {t("account:consult_with")}
-                  </p>
-                </div>
+            <div className="flex flex-wrap ml-10">
+              {getInfo?.data?.map((item) => {
+                let time = new Date(item.time);
+                time = time.getDate();
+                return (
+                  <div className="flex mx-2 mt-5 mb-20">
+                    <div
+                      className="border rounded-[12px] dark:text-[#1B3B3C] p-3 flex shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px] cursor-pointer "
+                      onClick={showFormBtn}
+                    >
+                      <div className="flex items-center mb-2">
+                        <div className="bg-[url('../images/konsultatsiya/doctor.png')] object-cover bg-center bg-no-repeat w-8 h-8"></div>
+                        <p className="text-[#1B3B3C]  ml-2 font-[500]">
+                          {item.description}
+                        </p>
+                      </div>
 
-                <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
-                  <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
-                  <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
-                  {/* <p>{consulData.data[0].doctorName}</p> */}
-                </div>
-              </div>
+                      <div className="flex items-center mb-3 rounded-[8px] px-2 h-[42px]  bg-[#E8FCEB] text-[12px]">
+                        <p className="bg-[url('../images/davolash/sand-clock.png')] bg-no-repeat w-4 h-5"></p>
+                        <BsClock className="text-[#1BB7B5] mx-2 ml-3" />
+                        {item.time}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="w-[194px] text-center mx-auto my-[120px]">

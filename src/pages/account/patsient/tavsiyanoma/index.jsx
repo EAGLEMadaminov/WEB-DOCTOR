@@ -57,7 +57,6 @@ function Tavsiyanoma() {
   useEffect(() => {
     fetchFunck();
   }, []);
-  console.log(sortInfo);
 
   const handleTavsiyahistoryBtn = () => {
     router.push("/account/patsient/tavsiyanoma/history");

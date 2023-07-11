@@ -11,6 +11,9 @@
   input::-webkit-calendar-picker-indicator {
     display: none !important;
   }
+  .login-page::-webkit-scrollbar {
+    display: none;
+  }
   /* input[type="time"]::-webkit-datetime-edit-ampm-field {
     display: none;
   } */

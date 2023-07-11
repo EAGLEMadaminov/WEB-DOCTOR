@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import Image from "next/image";
 import img from "../../../../images/cite-logo.png";
 import { FiChevronDown } from "react-icons/fi";
@@ -27,25 +28,11 @@ function Add() {
   const { konModal, setKonModal } = useGlobalContext();
   const { t } = useTranslation();
   const router = useRouter();
-  const [selectDate, setSelectDate] = useState("");
-  const [showDrugList, setShowDrgList] = useState(false);
-  const [btnBorder, setBtnBorder] = useState("8px");
-  const [hideBtnBorder, setHideBtnBorder] = useState("1px");
+  const [allData, setAllData] = useState({});
   const handleExit = () => {
     router.pathname = "";
   };
 
-  const handleShowDregBtn = () => {
-    if (showDrugList) {
-      setShowDrgList(false);
-      setBtnBorder("8px");
-      setHideBtnBorder("1px");
-    } else {
-      setShowDrgList(true);
-      setBtnBorder("0px");
-      setHideBtnBorder("0px");
-    }
-  };
   const GoToBackBtn = () => {
     router.push("/account/patsient/konsultatsiya");
   };
@@ -60,32 +47,18 @@ function Add() {
   const initialValues = {
     doctorName: "",
     patientId: "",
-    time: "",
+    time: new Date(),
     description: "",
   };
-  let alldata = {};
 
   const onSubmit = (data) => {
     console.log(data);
+    let token = localStorage.getItem("token");
     let id = localStorage.getItem("patId");
     data.patientId = id;
-    console.log(data.time);
-    let day = new Date(data.time).getDate();
-    if (day < 10) {
-      day = `0${day}`;
-    }
-    let month = new Date(data.time).getMonth() + 1;
-    if (month < 10) {
-      month = `0${month}`;
-    }
-    const year = new Date(data.time).getFullYear();
-    const contain = `${day}.${month}.${year}`;
-    console.log(contain);
-    data.time = contain;
-    console.log(data);
-    alldata = data;
-    console.log(alldata);
-    setKonModal(true);
+    flushSync(() => {
+      setAllData(data);
+    });
   };
 
   const formik = useFormik({
@@ -152,14 +125,18 @@ function Add() {
                   <button
                     type="submit"
                     className="px-[30px] bg-[#1BB7B5] py-2 text-white rounded-[12px] flex items-center"
-                    onClick={onSubmit}
+                    onClick={() => setKonModal(true)}
                   >
                     <BsCheck2 className="mr-3" />
                     {t("add:save")}
                   </button>
                 </div>
               </div>
-              {konModal ? <KonsultatsiyaModal data={alldata} /> : ""}
+              {konModal && allData !== undefined ? (
+                <KonsultatsiyaModal data={allData} />
+              ) : (
+                ""
+              )}
 
               <div className="mx-6 mt-10 rounded-[18px] border border-[#D7E6E7] relative">
                 <div className="flex">
@@ -175,7 +152,7 @@ function Add() {
                 </div>
                 <div className="flex bg-[#F8FCFC] rounded-b-[18px] min-h-[300px]">
                   <div className="flex flex-col text-[14px] text-[#759495] font-[400] border rounded-bl-[18px] border-[#D7E6E7] w-[300px] pl-5 p-2">
-                    <div className="flex border border-[#D7E6E7] bg-white mx-2 rounded-[12px] p-2">
+                    <div className="flex border border-[#D7E6E7] bg-white mt-2 mx-2 rounded-[12px] p-2">
                       <Field
                         name="doctorName"
                         className="outline-none text-black bg-white active:bg-white dark:bg-white dark:text-black"
