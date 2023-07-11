@@ -146,7 +146,7 @@ function Add() {
                 const { values } = form;
                 const { healings } = values;
                 return (
-                  <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6">
+                  <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6" id="index">
                     <div className="flex justify-between mt-7 mb-3">
                       <div className="flex items-center">
                         <button
