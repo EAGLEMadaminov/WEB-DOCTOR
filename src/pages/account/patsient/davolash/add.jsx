@@ -40,7 +40,7 @@ function Add() {
       {
         pill: "",
         times: [""],
-        quantity: "",
+        quantity: 0,
         type: "",
         period: "",
         extraInformation: "",
@@ -143,7 +143,8 @@ function Add() {
             <FieldArray name="healings">
               {(props) => {
                 const { push, remove, form } = props;
-                const { values } = form;
+                const { values,setFieldValue } = form;
+                console.log(values,'values');
                 const { healings } = values;
                 return (
                   <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6" id="index">
@@ -191,9 +192,8 @@ function Add() {
                                 <FieldArray name={`healings[${index}].times`}>
                                   {(arrayProps) => {
                                     const { form, push, remove } = arrayProps;
-                                    const { values } = form;
+                                    const { values ,setFieldValue} = form;
                                     const { healings } = values;
-                                    console.log(healings[0]);
                                     return (
                                       <div>
                                         <div
@@ -210,10 +210,10 @@ function Add() {
                                         </div>
 
                                         <div className="flex flex-col text-[14px] text-[#759495] font-[400]    items-center p-2">
-                                          {healings[0].times.map(
+                                          {healings[index].times.map(
                                             (time, idx) => {
                                               return (
-                                                <div className="my-3">
+                                                <div className="my-3" key={idx}>
                                                   <div className="flex items-center">
                                                     <p
                                                       key={idx}
@@ -264,12 +264,12 @@ function Add() {
                                   <Field
                                     name={`healings[${index}].quantity`}
                                     disabled
-                                    value={drugsNum}
+                                    value={group.quantity}
                                     className=" ml-4 text-[#1B3B3C]  disabled:bg-transparent outline-none  rounded-[8px] w-8 h-8"
                                   />
                                   <button
                                     className="rounded-[8px] w-8 h-8 bg-[#1BB7B5] pb-1 ml-0 text-[30px] leading-3 text-white "
-                                    onClick={addNumBtn}
+                                    onClick={()=> setFieldValue('quantity',group.quantity++)}
                                   >
                                     +
                                   </button>
@@ -359,7 +359,14 @@ function Add() {
                     <button
                       type="button"
                       className="bg-[#1BB7B5] text-white rounded-[12px] w-[170px] ml-5 mb-8 mt-2 p-2"
-                      onClick={() => push("")}
+                      onClick={() => push(  {
+                        pill: "",
+                        times: [""],
+                        quantity: "",
+                        type: "",
+                        period: "",
+                        extraInformation: "",
+                      })}
                     >
                       + {t("add:add_again")}
                     </button>
