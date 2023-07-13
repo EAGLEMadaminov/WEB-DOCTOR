@@ -49,7 +49,9 @@ function Add() {
   };
   const onSubmit = async (values) => {
     let token = localStorage.getItem("token");
-    console.log(values);
+    let id = localStorage.getItem("patId");
+    delete values.quantity;
+    values.patientId = id;
     const response = await fetch("https://vitainline.uz/api/v1/healings", {
       method: "POST",
       headers: {
@@ -58,6 +60,9 @@ function Add() {
       },
       body: JSON.stringify(values),
     });
+    if (response.status == 200 || response.status == 201) {
+      window.location.pathname = "/account/patsient/davolash";
+    }
   };
   const formik = useFormik({
     initialValues,
@@ -128,6 +133,7 @@ function Add() {
               <FiChevronDown className="text-xl" />
             </div>
             <button
+              type="button"
               onClick={handleExit}
               className="w-[200px] ml-[18px] flex py-[5px]  px-[18px]items-center h-[36px] text-[#FF0000] border rounded-[12px] border-[#D7E6E7]"
             >
@@ -143,14 +149,17 @@ function Add() {
             <FieldArray name="healings">
               {(props) => {
                 const { push, remove, form } = props;
-                const { values,setFieldValue } = form;
-                console.log(values,'values');
+                const { values, setFieldValue } = form;
                 const { healings } = values;
                 return (
-                  <div className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6" id="index">
+                  <div
+                    className="bg-white border border-[#D7E6E7] rounded-[24px] mt-6"
+                    id="index"
+                  >
                     <div className="flex justify-between mt-7 mb-3">
                       <div className="flex items-center">
                         <button
+                          type="button"
                           className="flex dark:text-[#1B3B3C] items-center ml-[40px] py-1 bg-[#F8FCFC] border rounded-[12px] w-[188px] font-[500]"
                           onClick={GoToBackBtn}
                         >
@@ -192,7 +201,7 @@ function Add() {
                                 <FieldArray name={`healings[${index}].times`}>
                                   {(arrayProps) => {
                                     const { form, push, remove } = arrayProps;
-                                    const { values ,setFieldValue} = form;
+                                    const { values } = form;
                                     const { healings } = values;
                                     return (
                                       <div>
@@ -202,6 +211,7 @@ function Add() {
                                         >
                                           {t("add:how_much")}
                                           <button
+                                            type="button"
                                             className=" w-7 h-7 bg-[#1BB7B5] rounded-[8px] ml-3 flex items-center justify-center"
                                             onClick={() => push("")}
                                           >
@@ -256,6 +266,7 @@ function Add() {
                                 </div>
                                 <div className="text-[14px] text-[#759495] mt-3  items-center font-[400] w-[150px] p-2  flex">
                                   <button
+                                    type="button"
                                     className="bg-white border ml-3  border-[#E9F6F6] rounded-[8px] w-8 h-8"
                                     onClick={subsNumBtn}
                                   >
@@ -268,8 +279,14 @@ function Add() {
                                     className=" ml-4 text-[#1B3B3C]  disabled:bg-transparent outline-none  rounded-[8px] w-8 h-8"
                                   />
                                   <button
+                                    type="button"
                                     className="rounded-[8px] w-8 h-8 bg-[#1BB7B5] pb-1 ml-0 text-[30px] leading-3 text-white "
-                                    onClick={()=> setFieldValue('quantity',group.quantity++)}
+                                    onClick={() =>
+                                      setFieldValue(
+                                        "quantity",
+                                        group.quantity++
+                                      )
+                                    }
                                   >
                                     +
                                   </button>
@@ -359,14 +376,16 @@ function Add() {
                     <button
                       type="button"
                       className="bg-[#1BB7B5] text-white rounded-[12px] w-[170px] ml-5 mb-8 mt-2 p-2"
-                      onClick={() => push(  {
-                        pill: "",
-                        times: [""],
-                        quantity: "",
-                        type: "",
-                        period: "",
-                        extraInformation: "",
-                      })}
+                      onClick={() =>
+                        push({
+                          pill: "",
+                          times: [""],
+                          quantity: "",
+                          type: "",
+                          period: "",
+                          extraInformation: "",
+                        })
+                      }
                     >
                       + {t("add:add_again")}
                     </button>

@@ -2,17 +2,18 @@ import React, { use, useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { GoSearch } from "react-icons/go";
 import { useGlobalContext } from "@/context";
+import { Field } from "formik";
 
-function LiveSearch() {
+function LiveSearch({ data }) {
   const [countries, setCountries] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [selected, setSelected] = useState("");
   const [open, setIsOpen] = useState(false);
   const { setChoosenPill } = useGlobalContext();
   setChoosenPill(selected);
-
+  data = selected;
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/all")
+    fetch("https://vitainline.uz/api/v1/pills")
       .then((res) => res.json())
       .then((data) => {
         setCountries(data);
@@ -53,31 +54,38 @@ function LiveSearch() {
             className="outline-none w-[130px] placeholder:text-gray-300 font-[400] p-2"
           />
         </div>
-        {countries?.map((country) => {
+        {countries?.data?.map((item) => {
           return (
-            <li
-              key={country.name.common}
-              className={`text-[#1B3B3C] font-[400] text-[14px] p-2 border-b-[1px] border-[#E9F6F6] hover:bg-sky-600 hover:text-white 
+            <Field key={item.title}>
+              {({ form }) => {
+                const { values } = form;
+                let num = values.healings.length - 1;
+                values.healings[num].pill = selected;
+                return (
+                  <li
+                    key={item.title}
+                    className={`text-[#1B3B3C] font-[400] text-[14px] p-2 border-b-[1px] border-[#E9F6F6] hover:bg-sky-600 hover:text-white 
               ${
-                country.name.common.toLowerCase() === selected.toLowerCase() &&
+                item.title.toLowerCase() === selected.toLowerCase() &&
                 "bg-sky-600 text-white"
               } ${
-                country.name.common.toLowerCase().startsWith(inputValue)
-                  ? "block "
-                  : "hidden"
-              }`}
-              onClick={() => {
-                if (
-                  country.name.common.toLowerCase() !== selected.toLowerCase()
-                ) {
-                  setSelected(country.name.common);
-                  setIsOpen(false);
-                  setInputValue("");
-                }
+                      item.title.toLowerCase().startsWith(inputValue)
+                        ? "block "
+                        : "hidden"
+                    }`}
+                    onClick={() => {
+                      if (item.title.toLowerCase() !== selected.toLowerCase()) {
+                        setSelected(item.title);
+                        setIsOpen(false);
+                        setInputValue("");
+                      }
+                    }}
+                  >
+                    {item.title}
+                  </li>
+                );
               }}
-            >
-              {country.name.common}
-            </li>
+            </Field>
           );
         })}
       </ul>

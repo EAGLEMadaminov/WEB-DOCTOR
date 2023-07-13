@@ -50,7 +50,7 @@ function Patsient() {
     router.push("/account/patsient/tavsiyanoma");
   };
   const handleKonsultant = () => {
-    router.push("/account/patsient/konsultatsiya");
+    // router.push("/account/patsient/konsultatsiya");
   };
   const handleExit = () => {
     window.location.pathname = "";
