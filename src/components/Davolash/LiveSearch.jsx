@@ -10,6 +10,7 @@ function LiveSearch({ data }) {
   const [selected, setSelected] = useState("");
   const [open, setIsOpen] = useState(false);
   const { setChoosenPill } = useGlobalContext();
+  console.log("ok");
   setChoosenPill(selected);
   data = selected;
   useEffect(() => {
