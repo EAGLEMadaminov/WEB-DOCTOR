@@ -77,7 +77,7 @@ function History() {
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} />
+            <Image src={img} width={50} height={50} alt="logo" />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
@@ -124,7 +124,7 @@ function History() {
             <div>
               {consInfo.data.map((item, index) => {
                 return (
-                  <div>
+                  <div key={index}>
                     <div className=" text-center dark:text-[#1B3B3C]  mx-10">
                       <h2 className="davolash-line w-[875px] mx-10">
                         22.05.2023

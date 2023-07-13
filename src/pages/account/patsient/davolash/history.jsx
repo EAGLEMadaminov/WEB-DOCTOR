@@ -80,7 +80,7 @@ function Davolash() {
         {/* head */}
         <div className="flex h-[60px] pt-9 justify-between">
           <div className="flex">
-            <Image src={img} width={50} height={50} />
+            <Image src={img} width={50} height={50} alt="logo" />
             <p className="text-black font-[500]">
               Vita in <span className="text-[#57D0CF]">line</span>
             </p>
@@ -139,7 +139,7 @@ function Davolash() {
             <div className="flex flex-wrap ml-8 mt-5">
               {hillInfo.data.map((item, index) => {
                 return (
-                  <div className="border rounded-[12px] mt-5 shadow-[0px_6px_16px] shadow-[#EFF4F4] p-3 flex flex-col w-[305px] ml-4 cursor-pointer">
+                  <div key={index} className="border rounded-[12px] mt-5 shadow-[0px_6px_16px] shadow-[#EFF4F4] p-3 flex flex-col w-[305px] ml-4 cursor-pointer">
                     <div className="flex items-center mb-2">
                       <div className="bg-[url('../images/davolash/davolash-dori.png')] bg-no-repeat w-8 h-8"></div>
                       <p className="text-[#1B3B3C]  ml-2 font-[500]">

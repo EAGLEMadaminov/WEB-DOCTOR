@@ -154,11 +154,11 @@ function Kansultatsiya() {
 
           {hasInfo ? (
             <div className="flex flex-wrap ml-10">
-              {getInfo?.data?.map((item) => {
+              {getInfo?.data?.map((item, index) => {
                 let time = new Date(item.time);
                 time = time.getDate();
                 return (
-                  <div className="flex mx-2 mt-5 mb-20">
+                  <div key={index} className="flex mx-2 mt-5 mb-20">
                     <div
                       className="border rounded-[12px] dark:text-[#1B3B3C] p-3 flex shadow-[0px_6px_16px] shadow-[#EFF4F4] flex-col w-[305px] cursor-pointer "
                       onClick={showFormBtn}
